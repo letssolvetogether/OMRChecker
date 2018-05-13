@@ -4,13 +4,20 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.letssolvetogether.omr.object.Circle;
+import com.letssolvetogether.omr.object.OMRSheet;
 import com.letssolvetogether.omr.object.OMRSheetCorners;
 
 import org.opencv.android.Utils;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.utils.Converters;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetectionUtil {
 
@@ -41,10 +48,14 @@ public class DetectionUtil {
 
         //Detect circles
         //Imgproc.HoughCircles(matGray, circles, Imgproc.CV_HOUGH_GRADIENT, 1, 230, 50, 50, 15, 25);
-        if(bmpOMRSheet.getHeight() == 1280 && bmpOMRSheet.getWidth() == 960)
-            Imgproc.HoughCircles(matGray, matCircles, Imgproc.CV_HOUGH_GRADIENT, 0.9, 500, 15, 30, 20, 30);
-        else if(bmpOMRSheet.getHeight() == 960 && bmpOMRSheet.getWidth() == 720)
-            Imgproc.HoughCircles(matGray, matCircles, Imgproc.CV_HOUGH_GRADIENT, 0.9, 300, 15, 30, 10, 20);
+
+        int minRadiusCornerCircle;
+        int maxRadiusCornerCircle;
+
+        minRadiusCornerCircle = bmpOMRSheet.getWidth() / 48;
+        maxRadiusCornerCircle = bmpOMRSheet.getWidth() / 32;
+
+        Imgproc.HoughCircles(matGray, matCircles, Imgproc.CV_HOUGH_GRADIENT, 0.9, bmpOMRSheet.getWidth()/2, 15, 30, minRadiusCornerCircle, maxRadiusCornerCircle);
 
         if(matCircles.cols() != 4){
             return null;
@@ -84,11 +95,67 @@ public class DetectionUtil {
                 }
             }else{
                 if(cx <= 400){
-                    omrSheetCorners.setBottomRightCorner(new Point(cx,cy));
-                }else{
                     omrSheetCorners.setBottomLeftCorner(new Point(cx,cy));
+                }else{
+                    omrSheetCorners.setBottomRightCorner(new Point(cx,cy));
                 }
             }
         }
+    }
+
+    public Bitmap findROIofOMR(OMRSheet omrSheet){
+
+        Point ptCornerPoints[];
+        int previewWidth = omrSheet.getWidth();
+        int previewHeight = omrSheet.getHeight();
+
+        Mat mat = new Mat(previewWidth, previewHeight, CvType.CV_8UC4);
+        Mat outputMat = new Mat(previewWidth, previewHeight, CvType.CV_8UC4);
+
+        List<Point> src = new ArrayList<>();
+
+        ptCornerPoints = getCornerPoints(omrSheet.getOmrSheetCorners());
+        for(int i=0; i< ptCornerPoints.length; i++){
+            src.add(ptCornerPoints[i]);
+        }
+
+        Utils.bitmapToMat(omrSheet.getBmpOMRSheet(), mat);
+
+        Mat startM = Converters.vector_Point2f_to_Mat(src);
+
+        List<Point> dest = new ArrayList<>();
+
+        ptCornerPoints = getNewCornerPoints(previewWidth, previewHeight);
+        for(int i=0; i< ptCornerPoints.length; i++){
+            dest.add(ptCornerPoints[i]);
+        }
+
+        Mat endM = Converters.vector_Point2f_to_Mat(dest);
+
+        Mat perspectiveTransform = Imgproc.getPerspectiveTransform(startM, endM);
+
+        Imgproc.warpPerspective(mat, outputMat, perspectiveTransform, new Size(previewWidth, previewHeight));
+
+        Utils.matToBitmap(outputMat,omrSheet.getBmpOMRSheet());
+        return omrSheet.getBmpOMRSheet();
+    }
+
+    private Point[] getCornerPoints(OMRSheetCorners omrSheetCorners){
+
+        Point pt[] = new Point[4];
+        pt[0] = new Point(omrSheetCorners.getTopLeftCorner().x, omrSheetCorners.getTopLeftCorner().y);
+        pt[1] = new Point(omrSheetCorners.getTopRightCorner().x, omrSheetCorners.getTopRightCorner().y);
+        pt[2] = new Point(omrSheetCorners.getBottomRightCorner().x, omrSheetCorners.getBottomRightCorner().y);
+        pt[3] = new Point(omrSheetCorners.getBottomLeftCorner().x, omrSheetCorners.getBottomLeftCorner().y);
+        return pt;
+    }
+
+    private Point[] getNewCornerPoints(int pictureWidth, int pictureHeight){
+        Point pt[] = new Point[4];
+        pt[0] = new Point(0, 0);
+        pt[1] = new Point(pictureWidth, 0);
+        pt[2] = new Point(pictureWidth, pictureHeight);
+        pt[3] = new Point(0, pictureHeight);
+        return pt;
     }
 }
