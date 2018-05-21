@@ -3,8 +3,11 @@ package com.letssolvetogether.omr.ui.activities.camera;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.arch.lifecycle.ViewModelProviders;
+import android.arch.persistence.room.Room;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,10 +26,14 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.cameraview.CameraView;
+import com.letssolvetogether.omr.db.AppDatabase;
+import com.letssolvetogether.omr.db.OMRKey;
 import com.letssolvetogether.omr.detection.ProcessOMRSheetAsyncTask;
 import com.letssolvetogether.omr.main.R;
 import com.letssolvetogether.omr.object.CameraCustomView;
+import com.letssolvetogether.omr.object.OMRSheet;
 import com.letssolvetogether.omr.ui.customviews.CustomView;
+import com.letssolvetogether.omr.utils.OMRUtils;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
@@ -67,6 +74,7 @@ public class CameraActivity extends AppCompatActivity implements
     private CameraView mCameraView;
     private CustomView mCustomView;
     private CameraCustomView cameraCustomView;
+    private OMRSheet omrSheet;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -140,6 +148,8 @@ public class CameraActivity extends AppCompatActivity implements
 
         setContentView(R.layout.activity_camera);
 
+        loadCorrectAnswers();
+
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mCameraView = findViewById(R.id.fullscreen_content);
@@ -148,11 +158,12 @@ public class CameraActivity extends AppCompatActivity implements
         cameraCustomView = new CameraCustomView();
         cameraCustomView.setCameraView(mCameraView);
         cameraCustomView.setCustomView(mCustomView);
+        cameraCustomView.setOmrSheet(omrSheet);
 
         if (mCameraView != null) {
             mCameraView.addCallback(mCallback);
         }
-        hide();
+        //hide();
         // Set up the user interaction to manually show or hide the system UI.
         mCameraView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,11 +171,29 @@ public class CameraActivity extends AppCompatActivity implements
                 //toggle();
             }
         });
+    }
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+    private void loadCorrectAnswers(){
+
+        omrSheet = ViewModelProviders.of(this).get(OMRSheet.class);
+
+        final AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "omr").build();
+
+        final String[] strCorrectAnswers = new String[1];
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                OMRKey omrKey = db.omrKeyDao().findById(1);
+                strCorrectAnswers[0] = omrKey.getStrCorrectAnswers();
+
+                int [] answers = OMRUtils.strtointAnswers(strCorrectAnswers[0]);
+
+                omrSheet.setNumberOfQuestions(20);
+                omrSheet.setCorrectAnswers(answers);
+                return null;
+            }
+        }.execute();
     }
 
     @Override
@@ -179,8 +208,8 @@ public class CameraActivity extends AppCompatActivity implements
 
     @Override
     protected void onPause() {
-        mCameraView.stop();
         super.onPause();
+        mCameraView.stop();
     }
 
     @Override
@@ -260,7 +289,7 @@ public class CameraActivity extends AppCompatActivity implements
 
         // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable);
-        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
+        //mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
 
     @SuppressLint("InlinedApi")

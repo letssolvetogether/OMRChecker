@@ -49,26 +49,24 @@ public class EvaluationUtil {
     private boolean[][] studentAnswers;
     private int[] correctAnswers;
 
-    public String getScore(OMRSheet omrSheet){
+    public int getScore(OMRSheet omrSheet){
         getStudentAnswers(omrSheet);
-        /*int score = calculateScore(studentAnswers, correctAnswers);
-        return score;*/
-        String score = calculateScore(studentAnswers, correctAnswers);
+        correctAnswers = omrSheet.getCorrectAnswers();
+        int score = calculateScore(studentAnswers, correctAnswers);
         return score;
     }
 
-    public String calculateScore(boolean[][] studentAnswers, int[] correctAnswers){
+    public int calculateScore(boolean[][] studentAnswers, int[] correctAnswers){
         int score = 0;
-        String answer = "";
+
         for(int i=0; i < numberOfQuestions; i++){
-            for(int j=0; j < optionsPerQuestions; j++){
-                if(studentAnswers[i][j] == true){
-                    answer += i+","+j+"\n";
+            if(correctAnswers[i] != 0){
+                if(studentAnswers[i][correctAnswers[i]-1]){
+                    score++;
                 }
             }
         }
-        return answer;
-        //return score;
+        return score;
     }
 
     private void getStudentAnswers(OMRSheet omrSheet){

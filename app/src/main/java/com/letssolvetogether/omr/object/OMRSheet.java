@@ -19,10 +19,9 @@ public class OMRSheet extends ViewModel {
 
     private int numberOfFilledPixelsInBoundingSquare;
 
-    public OMRSheet(int numberOfQuestions) {
-        omrSheetBlock = new OMRSheetBlock();
-        this.numberOfQuestions = numberOfQuestions;
-    }
+    private int[] correctAnswers;
+
+    public OMRSheet() {}
 
     public int getWidth(){
         return bmpOMRSheet.getWidth();
@@ -56,6 +55,8 @@ public class OMRSheet extends ViewModel {
 
         int w = bmpOMRSheet.getWidth();
         int h = bmpOMRSheet.getHeight();
+
+        omrSheetBlock = new OMRSheetBlock();
 
         omrSheetBlock.setBlockWidth((int)(w/3.2));
         omrSheetBlock.setBlockHeight((int)(h/1.39));
@@ -94,6 +95,10 @@ public class OMRSheet extends ViewModel {
         return numberOfQuestions;
     }
 
+    public void setNumberOfQuestions(int numberOfQuestions) {
+        this.numberOfQuestions = numberOfQuestions;
+    }
+
     public int getOptionsPerQuestions() {
         return optionsPerQuestions;
     }
@@ -111,5 +116,13 @@ public class OMRSheet extends ViewModel {
         int totalPixelsInBoundingSquare = getWidthOfBoundingSquareForCircle() * getWidthOfBoundingSquareForCircle();
         numberOfFilledPixelsInBoundingSquare = (int) (totalPixelsInBoundingSquare * 0.8);
         return numberOfFilledPixelsInBoundingSquare;
+    }
+
+    public int[] getCorrectAnswers() {
+        return correctAnswers;
+    }
+
+    public void setCorrectAnswers(int[] correctAnswers) {
+        this.correctAnswers = correctAnswers;
     }
 }

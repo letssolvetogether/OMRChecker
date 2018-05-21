@@ -6,6 +6,7 @@ import com.letssolvetogether.omr.ui.customviews.CustomView;
 public class CameraCustomView {
     CameraView mCameraView;
     CustomView customView;
+    OMRSheet omrSheet;
 
     public CameraView getCameraView() {
         return mCameraView;
@@ -21,5 +22,13 @@ public class CameraCustomView {
 
     public void setCustomView(CustomView customView) {
         this.customView = customView;
+    }
+
+    public OMRSheet getOmrSheet() {
+        return omrSheet;
+    }
+
+    public void setOmrSheet(OMRSheet omrSheet) {
+        this.omrSheet = omrSheet;
     }
 }

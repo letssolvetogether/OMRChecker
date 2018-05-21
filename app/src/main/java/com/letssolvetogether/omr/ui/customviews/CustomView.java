@@ -13,6 +13,7 @@ public class CustomView extends View {
 
     Paint paint;
     Rect rect;
+    int score;
 
     private void init() {
         paint = new Paint();
@@ -20,6 +21,7 @@ public class CustomView extends View {
         paint.setColor(Color.CYAN);
         paint.setAlpha(70);
         paint.setTextSize(50);
+        score = 0;
     }
 
     public CustomView(Context context) {
@@ -42,5 +44,11 @@ public class CustomView extends View {
         super.onDraw(canvas);
 
         canvas.drawText("OMR Sheet Detected",150,100,paint);
+        if(score != 0)
+            canvas.drawText("Score = " + score,150,200,paint);
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

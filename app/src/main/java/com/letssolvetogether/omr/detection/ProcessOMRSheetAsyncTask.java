@@ -28,11 +28,10 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<CameraCustomView, Void, 
     protected Boolean doInBackground(CameraCustomView... cameraCustomViews) {
         Log.i(TAG, "doInBackground");
 
-        omrSheet = new OMRSheet(20);
-
         cameraCustomView = cameraCustomViews[0];
         this.mCameraView = cameraCustomView.getCameraView();
         this.customView =  cameraCustomView.getCustomView();
+        this.omrSheet = cameraCustomView.getOmrSheet();
 
         bmpOMRSheet = this.mCameraView.getPreviewFrame();
 
@@ -53,8 +52,8 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<CameraCustomView, Void, 
             omrSheet.setOmrSheetCorners(omrSheetCorners);
 
             detectionUtil.findROIofOMR(omrSheet);
-            String score = new EvaluationUtil().getScore(omrSheet);
-            //customView.setScore(score);
+            int score = new EvaluationUtil().getScore(omrSheet);
+            customView.setScore(score);
             Log.i(TAG,"DONE");
         }
     }
