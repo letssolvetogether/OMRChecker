@@ -16,7 +16,10 @@
             android:name="com.letssolvetogether.omr.ui.activities.camera.CameraActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/FullscreenTheme">
+            android:theme="@style/FullscreenTheme"></activity>
+        <activity
+            android:name="com.letssolvetogether.omr.ui.activities.HomeActivity"
+            android:label="@string/title_activity_home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
