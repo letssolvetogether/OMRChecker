@@ -27,6 +27,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.letssolvetogether.omr.ui.activities.result.ResultActivity"></activity>
+        <activity android:name="com.letssolvetogether.omr.ui.activities.OMRKeyActivity"></activity>
     </application>
 
 </manifest>
