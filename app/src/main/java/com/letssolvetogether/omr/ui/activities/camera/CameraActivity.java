@@ -35,8 +35,6 @@ import com.letssolvetogether.omr.object.OMRSheet;
 import com.letssolvetogether.omr.ui.customviews.CustomView;
 import com.letssolvetogether.omr.utils.OMRUtils;
 
-import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 
 /**
@@ -126,21 +124,13 @@ public class CameraActivity extends AppCompatActivity implements
         }
     };
 
-    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
-        @Override
-        public void onManagerConnected(int status) {
-            switch (status) {
-                case LoaderCallbackInterface.SUCCESS: {
-                    Log.i(TAG, "OpenCV loaded successfully");
-                }
-                break;
-                default: {
-                    super.onManagerConnected(status);
-                }
-                break;
-            }
+    static{
+        if(!OpenCVLoader.initDebug()){
+            Log.d(TAG,"OpenCV not loaded");
+        }else{
+            Log.d(TAG,"OpenCV loaded");
         }
-    };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,13 +219,6 @@ public class CameraActivity extends AppCompatActivity implements
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                     REQUEST_CAMERA_PERMISSION);
-        }
-        if (!OpenCVLoader.initDebug()) {
-            Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, this, mLoaderCallback);
-        } else {
-            Log.d(TAG, "OpenCV library found inside package. Using it!");
-            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
         hide();
     }
