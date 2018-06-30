@@ -30,7 +30,6 @@ import com.letssolvetogether.omr.db.AppDatabase;
 import com.letssolvetogether.omr.db.OMRKey;
 import com.letssolvetogether.omr.detection.ProcessOMRSheetAsyncTask;
 import com.letssolvetogether.omr.main.R;
-import com.letssolvetogether.omr.object.CameraCustomView;
 import com.letssolvetogether.omr.object.OMRSheet;
 import com.letssolvetogether.omr.ui.customviews.CustomView;
 import com.letssolvetogether.omr.utils.OMRUtils;
@@ -71,7 +70,6 @@ public class CameraActivity extends AppCompatActivity implements
     private final Handler mHideHandler = new Handler();
     private CameraView mCameraView;
     private CustomView mCustomView;
-    private CameraCustomView cameraCustomView;
     private OMRSheet omrSheet;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -144,11 +142,6 @@ public class CameraActivity extends AppCompatActivity implements
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mCameraView = findViewById(R.id.fullscreen_content);
         mCustomView = findViewById(R.id.customView);
-
-        cameraCustomView = new CameraCustomView();
-        cameraCustomView.setCameraView(mCameraView);
-        cameraCustomView.setCustomView(mCustomView);
-        cameraCustomView.setOmrSheet(omrSheet);
 
         if (mCameraView != null) {
             mCameraView.addCallback(mCallback);
@@ -332,8 +325,8 @@ public class CameraActivity extends AppCompatActivity implements
 
         @Override
         public void onPreviewReady() {
-            ProcessOMRSheetAsyncTask processOMRSheetAsyncTask = new ProcessOMRSheetAsyncTask();
-            processOMRSheetAsyncTask.execute(cameraCustomView);
+            ProcessOMRSheetAsyncTask processOMRSheetAsyncTask = new ProcessOMRSheetAsyncTask(mCameraView, mCustomView, omrSheet);
+            processOMRSheetAsyncTask.execute();
 
             //findViewById(R.id.customView).setVisibility(View.VISIBLE);
         }
