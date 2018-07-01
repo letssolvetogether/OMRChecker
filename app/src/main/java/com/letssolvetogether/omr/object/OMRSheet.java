@@ -62,18 +62,18 @@ public class OMRSheet extends ViewModel {
         omrSheetBlock.setBlockHeight((int)(h/1.39));
 
         Log.i(TAG,"BlockWidth - " + (int)(w/3.2));
-        Log.i(TAG,"BlockHeight - " + (int)(h/1.85));
+        Log.i(TAG,"BlockHeight - " + (int)(h/1.39));
 
-        omrSheetBlock.setxFirstBlockOffset(w/8);
-        omrSheetBlock.setyFirstBlockOffset((int)(h/3.2));
+        omrSheetBlock.setxFirstBlockOffset((int)(w/6.1));
+        omrSheetBlock.setyFirstBlockOffset((int)(h/2.7));
 
-        Log.i(TAG,"xFirstBlockOffset - " + (w/8));
-        Log.i(TAG,"yFirstBlockOffset - " + (int)(h/3.2));
+        Log.i(TAG,"xFirstBlockOffset - " + (int)(w/6.1));
+        Log.i(TAG,"yFirstBlockOffset - " + (int)(h/2.7));
 
-        omrSheetBlock.setxDistanceBetweenBlock((int)(w/4.68));
+        omrSheetBlock.setxDistanceBetweenBlock((int)(w/5.8));
         omrSheetBlock.setyDistanceBetweenBlock(0);
 
-        Log.i(TAG,"xDistanceBetweenBlock - " + (int)(h/6.2));
+        Log.i(TAG,"xDistanceBetweenBlock - " + (int)(w/5.8));
         Log.i(TAG,"yDistanceBetweenBlock - " + 0);
 
         omrSheetBlock.setyDistanceBetweenRows((int)(h/55.65));
