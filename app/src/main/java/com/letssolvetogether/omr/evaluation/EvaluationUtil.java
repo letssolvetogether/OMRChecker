@@ -137,8 +137,13 @@ public class EvaluationUtil {
                 }
             }
         }
+
+        Bitmap bmp = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(mat, bmp);
+        omrSheet.setBmpOMRSheet(bmp);
+
         //just for testing purpose
-        storeImage(mat);
+        storeImage(bmp);
     }
 
     private int getMedian(Mat mat) {
@@ -169,9 +174,7 @@ public class EvaluationUtil {
         return med;
     }
 
-    public void storeImage(Mat img){
-        Bitmap bmp = Bitmap.createBitmap(img.cols(), img.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(img, bmp);
+    public void storeImage(Bitmap bmp){
         FileOutputStream out = null;
         File imageFile = new File(Environment.getExternalStorageDirectory(), "omr.jpg");
         try {

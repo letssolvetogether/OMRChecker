@@ -1,9 +1,14 @@
 package com.letssolvetogether.omr.detection;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.cameraview.CameraView;
 import com.letssolvetogether.omr.evaluation.EvaluationUtil;
@@ -20,12 +25,19 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
     Bitmap bmpOMRSheet;
     CameraView mCameraView;
     CustomView customView;
+    LinearLayout linearLayout;
+    ImageView iv;
     DetectionUtil detectionUtil = new DetectionUtil();
 
     public ProcessOMRSheetAsyncTask(CameraView mCameraView, CustomView customView, OMRSheet omrSheet) {
         this.omrSheet = omrSheet;
         this.mCameraView = mCameraView;
         this.customView = customView;
+
+        linearLayout = new LinearLayout(mCameraView.getContext());
+        iv = new ImageView(mCameraView.getContext());
+        iv.setAdjustViewBounds(true);
+        linearLayout.addView(iv);
     }
 
     @Override
@@ -43,7 +55,7 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
         if(omrSheetCorners == null){
             mCameraView.requestPreviewFrame();
         }else{
-            customView.setVisibility(View.VISIBLE);
+            //customView.setVisibility(View.VISIBLE);
 
             omrSheet.setBmpOMRSheet(bmpOMRSheet);
             omrSheet.setOmrSheetBlock();
@@ -51,9 +63,36 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
             detectionUtil.findROIofOMR(omrSheet);
             int score = new EvaluationUtil().getScore(omrSheet);
-            customView.setScore(score);
+            //customView.setScore(score);
+
+            final AlertDialog.Builder dialogOMRSheetDisplay = new AlertDialog.Builder(mCameraView.getContext());
+
+            //set custom title to dialog box
+            TextView textView = new TextView(mCameraView.getContext());
+            textView.setText(" Score: " + score);
+            textView.setTextColor(Color.BLACK);
+            textView.setTextSize(30);
+
+            //set OMR Sheet to be displayed in dialog
+            iv.setImageBitmap(omrSheet.getBmpOMRSheet());
+
+            dialogOMRSheetDisplay.setCustomTitle(textView);
+            dialogOMRSheetDisplay.setView(linearLayout);
+            dialogOMRSheetDisplay.setNeutralButton("Go for next OMR", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dlg, int sumthin) {
+                }
+            });
+
+            dialogOMRSheetDisplay.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    ProcessOMRSheetAsyncTask processOMRSheetAsyncTask = new ProcessOMRSheetAsyncTask(mCameraView, customView, omrSheet);
+                    processOMRSheetAsyncTask.execute();
+                }
+            });
+
+            dialogOMRSheetDisplay.show();
             Log.i(TAG,"DONE");
         }
     }
-
 }
