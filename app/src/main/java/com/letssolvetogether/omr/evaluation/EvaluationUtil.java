@@ -143,7 +143,7 @@ public class EvaluationUtil {
         omrSheet.setBmpOMRSheet(bmp);
 
         //just for testing purpose
-        storeImage(bmp);
+        //storeImage(bmp);
     }
 
     private int getMedian(Mat mat) {

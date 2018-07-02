@@ -167,13 +167,19 @@ public class CameraActivity extends AppCompatActivity implements
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                OMRKey omrKey = db.omrKeyDao().findById(1);
-                strCorrectAnswers[0] = omrKey.getStrCorrectAnswers();
+                if (db.omrKeyDao().findById(1) != null) {
 
-                int [] answers = OMRUtils.strtointAnswers(strCorrectAnswers[0]);
+                    OMRKey omrKey = db.omrKeyDao().findById(1);
+                    strCorrectAnswers[0] = omrKey.getStrCorrectAnswers();
 
-                omrSheet.setNumberOfQuestions(20);
-                omrSheet.setCorrectAnswers(answers);
+                    if (strCorrectAnswers[0] != null && !strCorrectAnswers[0].isEmpty()) {
+
+                        int[] answers = OMRUtils.strtointAnswers(strCorrectAnswers[0]);
+
+                        omrSheet.setNumberOfQuestions(20);
+                        omrSheet.setCorrectAnswers(answers);
+                    }
+                }
                 return null;
             }
         }.execute();

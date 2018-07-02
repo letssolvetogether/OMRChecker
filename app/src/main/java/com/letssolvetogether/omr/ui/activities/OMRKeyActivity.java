@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.letssolvetogether.omr.db.AppDatabase;
 import com.letssolvetogether.omr.db.OMRKey;
@@ -117,7 +118,8 @@ public class OMRKeyActivity extends AppCompatActivity implements RadioButton.OnC
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                strCorrectAnswers[0] = db.omrKeyDao().findById(1).getStrCorrectAnswers();
+                if(db.omrKeyDao().findById(1) != null)
+                    strCorrectAnswers[0] = db.omrKeyDao().findById(1).getStrCorrectAnswers();
                 return null;
             }
 
@@ -131,12 +133,13 @@ public class OMRKeyActivity extends AppCompatActivity implements RadioButton.OnC
 
                 answers = OMRUtils.strtointAnswers(strCorrectAnswers[0]);
 
-                for(int i=0; i< answers.length; i++){
-                    correctAnswer = answers[i];
-
-                    if(correctAnswer != 0){
-                        checkBox = findViewById((i*5) + (correctAnswer - 1));
-                        checkBox.setChecked(true);
+                if(answers != null){
+                    for(int i=0; i< answers.length; i++){
+                        correctAnswer = answers[i];
+                        if(correctAnswer != 0){
+                            checkBox = findViewById((i*5) + (correctAnswer - 1));
+                            checkBox.setChecked(true);
+                        }
                     }
                 }
             }
@@ -160,18 +163,21 @@ public class OMRKeyActivity extends AppCompatActivity implements RadioButton.OnC
 
         String strCorrectAnswers = OMRUtils.inttostrAnswers(correctAnswers);
 
-        final AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "omr").build();
-        final OMRKey omrKey = new OMRKey();
-        omrKey.setOmrkeyid(1);
-        omrKey.setStrCorrectAnswers(strCorrectAnswers);
+        if(strCorrectAnswers != null){
+            final AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                    AppDatabase.class, "omr").build();
+            final OMRKey omrKey = new OMRKey();
+            omrKey.setOmrkeyid(1);
+            omrKey.setStrCorrectAnswers(strCorrectAnswers);
 
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                db.omrKeyDao().insertOMRKey(omrKey);
-                return null;
-            }
-        }.execute();
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    db.omrKeyDao().insertOMRKey(omrKey);
+                    return null;
+                }
+            }.execute();
+            Toast.makeText(this,"Answers saved",Toast.LENGTH_LONG).show();
+        }
     }
 }
