@@ -1,0 +1,27 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:title="@string/title_preference_answersheets"
+        android:key="@string/key_preference_answersheets">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="@string/url_answersheet_20_questions" />
+    </Preference>
+    <com.letssolvetogether.omr.ui.activities.OpenSourceLicensePreference
+        android:title="@string/title_preference_opensourcelibraries"
+        android:dialogTitle="@string/dialog_title_preference_opensourcelibraries"
+        android:key="@string/key_preference_opensourcelibraries"/>
+    <Preference
+        android:title="@string/title_preference_contactus"
+        android:key="@string/key_preference_contactus">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="@string/url_fb_letssolvetogether" />
+    </Preference>
+    <Preference
+        android:title="@string/title_preference_about"
+        android:key="@string/key_preference_about">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="@string/url_letssolvetogether" />
+    </Preference>
+</PreferenceScreen>

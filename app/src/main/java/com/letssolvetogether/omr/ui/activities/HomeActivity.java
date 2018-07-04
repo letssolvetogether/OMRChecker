@@ -2,6 +2,7 @@ package com.letssolvetogether.omr.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -29,8 +30,11 @@ public class HomeActivity extends AppCompatActivity{
                     Intent cameraIntent = new Intent(HomeActivity.this, CameraActivity.class);
                     startActivity(cameraIntent);
                     return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                case R.id.navigation_more:
+                    Intent settingsIntent = new Intent(HomeActivity.this, SettingsActivity.class);
+                    settingsIntent.putExtra(PreferenceActivity.EXTRA_NO_HEADERS,true);
+                    settingsIntent.putExtra( PreferenceActivity.EXTRA_SHOW_FRAGMENT, SettingsActivity.GeneralPreferenceFragment.class.getName());
+                    startActivity(settingsIntent);
                     return true;
             }
             return false;
