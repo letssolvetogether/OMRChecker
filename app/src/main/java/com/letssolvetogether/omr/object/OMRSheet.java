@@ -70,15 +70,15 @@ public class OMRSheet extends ViewModel {
         Log.i(TAG,"xFirstBlockOffset - " + (int)(w/6.1));
         Log.i(TAG,"yFirstBlockOffset - " + (int)(h/2.7));
 
-        omrSheetBlock.setxDistanceBetweenBlock((int)(w/5.8));
+        omrSheetBlock.setxDistanceBetweenBlock((int)(w/6.3));
         omrSheetBlock.setyDistanceBetweenBlock(0);
 
-        Log.i(TAG,"xDistanceBetweenBlock - " + (int)(w/5.8));
+        Log.i(TAG,"xDistanceBetweenBlock - " + (int)(w/6.3));
         Log.i(TAG,"yDistanceBetweenBlock - " + 0);
 
-        omrSheetBlock.setyDistanceBetweenRows((int)(h/55.65));
+        omrSheetBlock.setyDistanceBetweenRows((int)(h/53.0));
 
-        Log.i(TAG,"yDistanceBetweenRows - " + (int)(h/55.65));
+        Log.i(TAG,"yDistanceBetweenRows - " + (int)(h/53.0));
 
         omrSheetBlock.setxDistanceBetweenCircles((int)(w/14.77));
         omrSheetBlock.setyDistanceBetweenCircles((int)(h/26.6));
@@ -104,7 +104,7 @@ public class OMRSheet extends ViewModel {
     }
 
     public int getWidthOfBoundingSquareForCircle() {
-        widthOfBoundingSquareForCircle = (int)(getWidth()/18.46);
+        widthOfBoundingSquareForCircle = (int)(getWidth()/17.0);
         return widthOfBoundingSquareForCircle;
     }
 
