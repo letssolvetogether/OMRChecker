@@ -27,12 +27,16 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
     CustomView customView;
     LinearLayout linearLayout;
     ImageView iv;
-    DetectionUtil detectionUtil = new DetectionUtil();
+    DetectionUtil detectionUtil;
+    PrereqChecks prereqChecks;
 
     public ProcessOMRSheetAsyncTask(CameraView mCameraView, CustomView customView, OMRSheet omrSheet) {
         this.omrSheet = omrSheet;
         this.mCameraView = mCameraView;
         this.customView = customView;
+
+        detectionUtil = new DetectionUtil();
+        prereqChecks = new PrereqChecks();
 
         linearLayout = new LinearLayout(mCameraView.getContext());
         iv = new ImageView(mCameraView.getContext());
@@ -45,6 +49,13 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
         Log.i(TAG, "doInBackground");
 
         bmpOMRSheet = this.mCameraView.getPreviewFrame();
+
+        boolean isBlurry = prereqChecks.isBlurry(bmpOMRSheet);
+        if(isBlurry) {
+            mCameraView.requestPreviewFrame();
+            return true;
+        }
+
         omrSheetCorners = detectionUtil.detectOMRSheetCorners(bmpOMRSheet);
         return true;
     }
