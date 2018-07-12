@@ -1,6 +1,9 @@
 package com.letssolvetogether.omr.evaluation;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Environment;
 import android.util.Log;
 
@@ -91,6 +94,12 @@ public class EvaluationUtil {
         numberOfQuestions = omrSheet.getNumberOfQuestions();
         questionsPerBlock = omrSheet.getQuestionsPerBlock();
 
+        Canvas canvas = new Canvas(omrSheet.getBmpOMRSheet());
+        Paint greenPaint = new Paint();
+        greenPaint.setStyle(Paint.Style.STROKE);
+        greenPaint.setColor(Color.GREEN);
+        greenPaint.setStrokeWidth(5);
+
         Mat mat = new Mat();
         Utils.bitmapToMat(omrSheet.getBmpOMRSheet(), mat);
 
@@ -125,22 +134,17 @@ public class EvaluationUtil {
                     c /= 2;
                     Point pt1 = new Point(ptrect.x - c, ptrect.y - c);
                     Point pt2 = new Point(ptrect.x + c, ptrect.y + c);
-                    Imgproc.rectangle(mat, pt1, pt2, new Scalar(255, 0, 0));
 
                     Rect rect = new Rect(pt1, pt2);
                     int nonZeroCount = Core.countNonZero(matThresholded.submat(rect));
                     Log.d("nonzero", "i= " + (i +1) + " j= " + (j+1) + " " + nonZeroCount);
                     if (nonZeroCount <= omrSheet.getNumberOfFilledPixelsInBoundingSquare()) {
                         studentAnswers[i + (questionsPerBlock * k)][j] = true;
-                        Imgproc.rectangle(mat, pt1, pt2, new Scalar(255, 0, 0),5);
+                        canvas.drawRect(new android.graphics.Rect((int)pt1.x,(int)pt1.y,(int)pt2.x,(int)pt2.y),greenPaint);
                     }
                 }
             }
         }
-
-        Bitmap bmp = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(mat, bmp);
-        omrSheet.setBmpOMRSheet(bmp);
 
         //just for testing purpose
         //storeImage(bmp);
