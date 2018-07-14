@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.arch.persistence.room.Room;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import com.google.android.cameraview.CameraView;
 import com.letssolvetogether.omr.db.AppDatabase;
 import com.letssolvetogether.omr.db.OMRKey;
+import com.letssolvetogether.omr.detection.PrereqChecks;
 import com.letssolvetogether.omr.detection.ProcessOMRSheetAsyncTask;
 import com.letssolvetogether.omr.main.R;
 import com.letssolvetogether.omr.object.OMRSheet;
@@ -71,6 +73,11 @@ public class CameraActivity extends AppCompatActivity implements
     private CameraView mCameraView;
     private CustomView mCustomView;
     private OMRSheet omrSheet;
+    private static int blurImagesCount;
+    private static int lowBrightnessImagesCount;
+    private static String BLUR_IMAGE = "Blur Image";
+    private static String LOW_BRIGHTNESS = "Low Brightness";
+
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -331,10 +338,55 @@ public class CameraActivity extends AppCompatActivity implements
 
         @Override
         public void onPreviewReady() {
-            ProcessOMRSheetAsyncTask processOMRSheetAsyncTask = new ProcessOMRSheetAsyncTask(mCameraView, mCustomView, omrSheet);
-            processOMRSheetAsyncTask.execute();
+            Bitmap bmpOMRSheet = mCameraView.getPreviewFrame();
+            PrereqChecks prereqChecks = new PrereqChecks();
+
+            boolean isBlurry = prereqChecks.isBlurry(bmpOMRSheet);
+            boolean hasLowBrightness = prereqChecks.hasLowBrightness(bmpOMRSheet);
+
+            if(isBlurry) {
+                blurImagesCount++;
+            }
+            if(blurImagesCount > 10){
+                blurImagesCount = 0;
+                displayToast(BLUR_IMAGE, 1000);
+            }
+
+            if(hasLowBrightness) {
+                lowBrightnessImagesCount++;
+            }
+            if(lowBrightnessImagesCount > 10) {
+                lowBrightnessImagesCount = 0;
+                displayToast(LOW_BRIGHTNESS, 1000);
+            }
+
+            if(isBlurry || hasLowBrightness) {
+                mCameraView.requestPreviewFrame();
+            }else{
+                blurImagesCount = 0;
+                lowBrightnessImagesCount = 0;
+                ProcessOMRSheetAsyncTask processOMRSheetAsyncTask = new ProcessOMRSheetAsyncTask(mCameraView, mCustomView, omrSheet);
+                processOMRSheetAsyncTask.execute();
+            }
 
             //findViewById(R.id.customView).setVisibility(View.VISIBLE);
+        }
+
+        public void displayToast(final String toastMessage, final int duration){
+            CameraActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    final Toast t = Toast.makeText(CameraActivity.this,toastMessage,Toast.LENGTH_SHORT);
+                    t.show();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            t.cancel();
+                        }
+                    }, duration);
+                }
+            });
         }
     };
 
