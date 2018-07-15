@@ -110,6 +110,9 @@ public class EvaluationUtil {
         Mat matGray = new Mat();
         Imgproc.cvtColor(matGaussianBlur, matGray, Imgproc.COLOR_RGB2GRAY);
 
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_ELLIPSE, new Size(8,8));
+        Imgproc.morphologyEx(matGray, matGray, Imgproc.MORPH_CLOSE,kernel);
+
         double median = getMedian(matGray);
 
         Mat matThresholded = new Mat();
