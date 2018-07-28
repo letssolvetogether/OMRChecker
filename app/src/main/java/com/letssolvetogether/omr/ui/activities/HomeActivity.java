@@ -10,11 +10,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.instacart.library.truetime.TrueTime;
 import com.letssolvetogether.omr.main.R;
+import com.letssolvetogether.omr.truetime.InitTrueTimeAsyncTask;
 import com.letssolvetogether.omr.ui.activities.camera.CameraActivity;
 
 public class HomeActivity extends AppCompatActivity{
 
+    private static final String TAG = "HomeActivity";
     private TextView mTextMessage;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -45,6 +48,10 @@ public class HomeActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        if(!TrueTime.isInitialized()){
+            new InitTrueTimeAsyncTask(HomeActivity.this).execute();
+        }
 
         mTextMessage = findViewById(R.id.message);
         BottomNavigationView navigation = findViewById(R.id.navigation);

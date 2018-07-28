@@ -48,4 +48,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation project(':openCVLibrary310')
     implementation project(':library')
+    compile project(':truetime')
 }
