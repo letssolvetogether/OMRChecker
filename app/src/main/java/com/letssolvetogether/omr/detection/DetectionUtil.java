@@ -115,6 +115,10 @@ public class DetectionUtil {
         List<Point> src = new ArrayList<>();
 
         ptCornerPoints = getCornerPoints(omrSheet.getOmrSheetCorners());
+
+        if(ptCornerPoints == null)
+            return null;
+
         for(int i=0; i< ptCornerPoints.length; i++){
             src.add(ptCornerPoints[i]);
         }
@@ -126,6 +130,10 @@ public class DetectionUtil {
         List<Point> dest = new ArrayList<>();
 
         ptCornerPoints = getNewCornerPoints(previewWidth, previewHeight);
+
+        if(ptCornerPoints == null)
+            return null;
+
         for(int i=0; i< ptCornerPoints.length; i++){
             dest.add(ptCornerPoints[i]);
         }
@@ -147,6 +155,11 @@ public class DetectionUtil {
         pt[1] = new Point(omrSheetCorners.getTopRightCorner().x, omrSheetCorners.getTopRightCorner().y);
         pt[2] = new Point(omrSheetCorners.getBottomRightCorner().x, omrSheetCorners.getBottomRightCorner().y);
         pt[3] = new Point(omrSheetCorners.getBottomLeftCorner().x, omrSheetCorners.getBottomLeftCorner().y);
+
+        for(int i=0; i<4; i++){
+            if(pt[i]==null)
+                return null;
+        }
         return pt;
     }
 
@@ -156,6 +169,11 @@ public class DetectionUtil {
         pt[1] = new Point(pictureWidth, 0);
         pt[2] = new Point(pictureWidth, pictureHeight);
         pt[3] = new Point(0, pictureHeight);
+
+        for(int i=0; i<4; i++){
+            if(pt[i]==null)
+                return null;
+        }
         return pt;
     }
 }
