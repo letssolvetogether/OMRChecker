@@ -1,4 +1,4 @@
-package com.letssolvetogether.omr.detection;
+package com.letssolvetogether.omr;
 
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -11,10 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.cameraview.CameraView;
+import com.letssolvetogether.omr.detection.DetectionUtil;
 import com.letssolvetogether.omr.evaluation.EvaluationUtil;
 import com.letssolvetogether.omr.object.OMRSheet;
 import com.letssolvetogether.omr.object.OMRSheetCorners;
-import com.letssolvetogether.omr.ui.customviews.CustomView;
+import com.letssolvetogether.omr.utils.PrereqChecks;
 
 public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -24,16 +25,15 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
     OMRSheetCorners omrSheetCorners;
     Bitmap bmpOMRSheet;
     CameraView mCameraView;
-    CustomView customView;
+    //CustomView customView;
     LinearLayout linearLayout;
     ImageView iv;
     DetectionUtil detectionUtil;
     PrereqChecks prereqChecks;
 
-    public ProcessOMRSheetAsyncTask(CameraView mCameraView, CustomView customView, OMRSheet omrSheet) {
+    public ProcessOMRSheetAsyncTask(CameraView mCameraView, OMRSheet omrSheet) {
         this.omrSheet = omrSheet;
         this.mCameraView = mCameraView;
-        this.customView = customView;
 
         detectionUtil = new DetectionUtil();
         prereqChecks = new PrereqChecks();
@@ -66,15 +66,14 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
         if(omrSheetCorners == null){
             mCameraView.requestPreviewFrame();
         }else{
-            //customView.setVisibility(View.VISIBLE);
 
             omrSheet.setBmpOMRSheet(bmpOMRSheet);
             omrSheet.setOmrSheetBlock();
             omrSheet.setOmrSheetCorners(omrSheetCorners);
 
             detectionUtil.findROIofOMR(omrSheet);
+
             int score = new EvaluationUtil().getScore(omrSheet);
-            //customView.setScore(score);
 
             final AlertDialog.Builder dialogOMRSheetDisplay = new AlertDialog.Builder(mCameraView.getContext());
 
@@ -97,7 +96,7 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
             dialogOMRSheetDisplay.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialogInterface) {
-                    ProcessOMRSheetAsyncTask processOMRSheetAsyncTask = new ProcessOMRSheetAsyncTask(mCameraView, customView, omrSheet);
+                    ProcessOMRSheetAsyncTask processOMRSheetAsyncTask = new ProcessOMRSheetAsyncTask(mCameraView, omrSheet);
                     processOMRSheetAsyncTask.execute();
                 }
             });

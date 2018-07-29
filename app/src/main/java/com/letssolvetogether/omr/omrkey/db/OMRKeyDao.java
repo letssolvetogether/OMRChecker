@@ -1,4 +1,4 @@
-package com.letssolvetogether.omr.db;
+package com.letssolvetogether.omr.omrkey.db;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;

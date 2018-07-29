@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.letssolvetogether.omr.ui.activities.HomeActivity">
+    tools:context="com.letssolvetogether.omr.home.ui.HomeActivity">
 
     <TextView
         android:id="@+id/message"

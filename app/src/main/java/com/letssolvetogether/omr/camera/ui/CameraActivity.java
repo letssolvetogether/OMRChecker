@@ -1,4 +1,4 @@
-package com.letssolvetogether.omr.ui.activities.camera;
+package com.letssolvetogether.omr.camera.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -27,13 +27,12 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.cameraview.CameraView;
-import com.letssolvetogether.omr.db.AppDatabase;
-import com.letssolvetogether.omr.db.OMRKey;
-import com.letssolvetogether.omr.detection.PrereqChecks;
-import com.letssolvetogether.omr.detection.ProcessOMRSheetAsyncTask;
+import com.letssolvetogether.omr.omrkey.db.AppDatabase;
+import com.letssolvetogether.omr.omrkey.db.OMRKey;
+import com.letssolvetogether.omr.utils.PrereqChecks;
+import com.letssolvetogether.omr.ProcessOMRSheetAsyncTask;
 import com.letssolvetogether.omr.main.R;
 import com.letssolvetogether.omr.object.OMRSheet;
-import com.letssolvetogether.omr.ui.customviews.CustomView;
 import com.letssolvetogether.omr.utils.OMRUtils;
 
 import org.opencv.android.OpenCVLoader;
@@ -71,7 +70,6 @@ public class CameraActivity extends AppCompatActivity implements
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     private CameraView mCameraView;
-    private CustomView mCustomView;
     private OMRSheet omrSheet;
     private static int blurImagesCount;
     private static int lowBrightnessImagesCount;
@@ -148,7 +146,6 @@ public class CameraActivity extends AppCompatActivity implements
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mCameraView = findViewById(R.id.fullscreen_content);
-        mCustomView = findViewById(R.id.customView);
 
         if (mCameraView != null) {
             mCameraView.addCallback(mCallback);
@@ -365,11 +362,9 @@ public class CameraActivity extends AppCompatActivity implements
             }else{
                 blurImagesCount = 0;
                 lowBrightnessImagesCount = 0;
-                ProcessOMRSheetAsyncTask processOMRSheetAsyncTask = new ProcessOMRSheetAsyncTask(mCameraView, mCustomView, omrSheet);
+                ProcessOMRSheetAsyncTask processOMRSheetAsyncTask = new ProcessOMRSheetAsyncTask(mCameraView, omrSheet);
                 processOMRSheetAsyncTask.execute();
             }
-
-            //findViewById(R.id.customView).setVisibility(View.VISIBLE);
         }
 
         public void displayToast(final String toastMessage, final int duration){

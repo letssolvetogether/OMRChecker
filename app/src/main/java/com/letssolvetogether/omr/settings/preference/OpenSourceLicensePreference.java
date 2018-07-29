@@ -1,4 +1,4 @@
-package com.letssolvetogether.omr.ui.activities;
+package com.letssolvetogether.omr.settings.preference;
 
 import android.content.Context;
 import android.preference.DialogPreference;

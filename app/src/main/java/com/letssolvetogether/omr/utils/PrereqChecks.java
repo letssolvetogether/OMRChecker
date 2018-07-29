@@ -1,4 +1,4 @@
-package com.letssolvetogether.omr.detection;
+package com.letssolvetogether.omr.utils;
 
 import android.graphics.Bitmap;
 import android.util.Log;

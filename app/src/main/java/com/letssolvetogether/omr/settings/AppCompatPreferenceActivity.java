@@ -1,4 +1,4 @@
-package com.letssolvetogether.omr.ui.activities;
+package com.letssolvetogether.omr.settings;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
