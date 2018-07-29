@@ -73,7 +73,7 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
             detectionUtil.findROIofOMR(omrSheet);
 
-            int score = new EvaluationUtil().getScore(omrSheet);
+            int score = new EvaluationUtil(omrSheet).getScore();
 
             final AlertDialog.Builder dialogOMRSheetDisplay = new AlertDialog.Builder(mCameraView.getContext());
 

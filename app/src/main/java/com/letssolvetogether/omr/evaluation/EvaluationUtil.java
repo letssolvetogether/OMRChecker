@@ -52,27 +52,10 @@ public class EvaluationUtil {
     private boolean[][] studentAnswers;
     private int[] correctAnswers;
 
-    public int getScore(OMRSheet omrSheet){
-        getStudentAnswers(omrSheet);
-        correctAnswers = omrSheet.getCorrectAnswers();
-        int score = calculateScore(studentAnswers, correctAnswers);
-        return score;
-    }
+    private OMRSheet omrSheet;
 
-    public int calculateScore(boolean[][] studentAnswers, int[] correctAnswers){
-        int score = 0;
-
-        for(int i=0; i < numberOfQuestions; i++){
-            if(correctAnswers[i] != 0){
-                if(studentAnswers[i][correctAnswers[i]-1]){
-                    score++;
-                }
-            }
-        }
-        return score;
-    }
-
-    private void getStudentAnswers(OMRSheet omrSheet){
+    public EvaluationUtil(OMRSheet omrSheet) {
+        this.omrSheet = omrSheet;
 
         OMRSheetBlock omrSheetBlock = omrSheet.getOmrSheetBlock();
 
@@ -93,12 +76,65 @@ public class EvaluationUtil {
         optionsPerQuestions = omrSheet.getOptionsPerQuestions();
         numberOfQuestions = omrSheet.getNumberOfQuestions();
         questionsPerBlock = omrSheet.getQuestionsPerBlock();
+    }
 
+    public int getScore(){
+        getStudentAnswers(omrSheet);
+        correctAnswers = omrSheet.getCorrectAnswers();
+        int score = calculateScore(studentAnswers, correctAnswers);
+        return score;
+    }
+
+    public int calculateScore(boolean[][] studentAnswers, int[] correctAnswers){
+        int score = 0;
+        int answerPerQuestion;
+
+        for(int i=0; i < numberOfQuestions; i++){
+            answerPerQuestion =0;
+            for(int j=0; j < optionsPerQuestions; j++){
+                if(correctAnswers[i] != 0 && studentAnswers[i][j]){
+                    answerPerQuestion++;
+                }
+            }
+            if(answerPerQuestion==1 && studentAnswers[i][correctAnswers[i]-1]){
+                drawRectangle(i/questionsPerBlock,i%questionsPerBlock,correctAnswers[i]-1,Color.GREEN);
+                score++;
+            }
+        }
+        return score;
+    }
+
+    public void drawRectangle(int block, int questionNo, int option, int color){
         Canvas canvas = new Canvas(omrSheet.getBmpOMRSheet());
+
+        Point pt[] = getRectangleCoordinates(block, questionNo, option);
+
+        Point leftTopRectPoint = pt[0];
+        Point rightBottomRectPoint = pt[1];
+
         Paint greenPaint = new Paint();
         greenPaint.setStyle(Paint.Style.STROKE);
-        greenPaint.setColor(Color.GREEN);
+        greenPaint.setColor(color);
         greenPaint.setStrokeWidth(5);
+
+        canvas.drawRect(new android.graphics.Rect((int)leftTopRectPoint.x,(int)leftTopRectPoint.y,(int)rightBottomRectPoint.x,(int)rightBottomRectPoint.y),greenPaint);
+    }
+
+    private Point[] getRectangleCoordinates(int block, int questionNo, int option){
+        Point ptrect = new Point();
+        ptrect.x = xFirstBlockOffset + (block * blockWidth) + (block * xDistanceBetweenBlock) + (option * xDistanceBetweenCircles);
+        ptrect.y = yFirstBlockOffset + (block * yDistanceBetweenBlock) + (questionNo * yDistanceBetweenCircles) + (yDistanceBetweenRows * questionNo);
+        int c = omrSheet.getWidthOfBoundingSquareForCircle();
+        c /= 2;
+
+        Point pt[] = new Point[2];
+        pt[0] = new Point(ptrect.x - c, ptrect.y - c);
+        pt[1] = new Point(ptrect.x + c, ptrect.y + c);
+
+        return pt;
+    }
+
+    private void getStudentAnswers(OMRSheet omrSheet){
 
         Mat mat = new Mat();
         Utils.bitmapToMat(omrSheet.getBmpOMRSheet(), mat);
@@ -131,19 +167,15 @@ public class EvaluationUtil {
         for(int k = 0; k < omrSheet.getNumberOfBlocks(); k++) {
             for(int i = 0; i< omrSheet.getQuestionsPerBlock(); i++) {
                 for (int j = 0; j < optionsPerQuestions; j++) {
-                    ptrect.x = xFirstBlockOffset + (k * blockWidth) + (k * xDistanceBetweenBlock) + (j * xDistanceBetweenCircles);
-                    ptrect.y = yFirstBlockOffset + (k * yDistanceBetweenBlock) + (i * yDistanceBetweenCircles) + (yDistanceBetweenRows * i);
-                    int c = omrSheet.getWidthOfBoundingSquareForCircle();
-                    c /= 2;
-                    Point pt1 = new Point(ptrect.x - c, ptrect.y - c);
-                    Point pt2 = new Point(ptrect.x + c, ptrect.y + c);
+                    Point pt[] = getRectangleCoordinates(k,i,j);
+                    Point leftTopRectPoint = pt[0];
+                    Point rightBottomRectPoint = pt[1];
 
-                    Rect rect = new Rect(pt1, pt2);
+                    Rect rect = new Rect(leftTopRectPoint, rightBottomRectPoint);
                     int nonZeroCount = Core.countNonZero(matThresholded.submat(rect));
                     Log.d("nonzero", "i= " + (i +1) + " j= " + (j+1) + " " + nonZeroCount);
                     if (nonZeroCount <= omrSheet.getNumberOfFilledPixelsInBoundingSquare()) {
                         studentAnswers[i + (questionsPerBlock * k)][j] = true;
-                        canvas.drawRect(new android.graphics.Rect((int)pt1.x,(int)pt1.y,(int)pt2.x,(int)pt2.y),greenPaint);
                     }
                 }
             }
