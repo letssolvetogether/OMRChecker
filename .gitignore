@@ -10,7 +10,10 @@
 app/build
 
 #Camera Library
-library/
+cameralibrary/
 
 #OpenCV Library
 openCVLibrary310/
+
+#truetime
+truetime/

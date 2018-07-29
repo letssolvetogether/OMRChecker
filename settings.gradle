@@ -1,4 +1,4 @@
 include ':app'
-include ':library'
+include ':cameralibrary'
 include ':openCVLibrary310'
 include ':truetime'
