@@ -23,8 +23,13 @@ android {
         abi {
             enable true
             reset()
-            include 'arm64-v8a',"armeabi","armeabi-v7a","mips","mips64","x86","x86_64"
+            include 'arm64-v8a', "armeabi", "armeabi-v7a", "mips", "mips64", "x86", "x86_64"
             universalApk true
+        }
+    }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
         }
     }
 }
@@ -48,6 +53,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 
     testImplementation 'junit:junit:4.12'
+    testImplementation "org.robolectric:robolectric:3.8"
 
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
