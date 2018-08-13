@@ -177,7 +177,9 @@ public class EvaluationUtil {
         }
 
         //just for testing purpose
-        //storeImage(bmp);
+//        storeImage(matOMR,"omr_orig");
+//        storeImage(matGray,"omr_gray");
+//        storeImage(matThresholded,"omr_thrshold");
     }
 
     private int getMedian(Mat mat) {
@@ -208,9 +210,13 @@ public class EvaluationUtil {
         return med;
     }
 
-    public void storeImage(Bitmap bmp){
+    public void storeImage(Mat mat, String imageName){
         FileOutputStream out = null;
-        File imageFile = new File(Environment.getExternalStorageDirectory(), "omr.jpg");
+        File imageFile = new File(Environment.getExternalStorageDirectory(), imageName+".jpg");
+
+        Bitmap bmp = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(mat, bmp);
+
         try {
             if(!imageFile.exists()) {
                 imageFile.createNewFile();
