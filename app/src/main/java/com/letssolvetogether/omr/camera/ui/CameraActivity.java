@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.cameraview.CameraView;
+import com.letssolvetogether.omr.object.OMRSheetViewModelFactory;
 import com.letssolvetogether.omr.omrkey.db.AppDatabase;
 import com.letssolvetogether.omr.omrkey.db.OMRKey;
 import com.letssolvetogether.omr.utils.PrereqChecks;
@@ -162,7 +163,7 @@ public class CameraActivity extends AppCompatActivity implements
 
     private void loadCorrectAnswers(){
 
-        omrSheet = ViewModelProviders.of(this).get(OMRSheet.class);
+        omrSheet = ViewModelProviders.of(this, new OMRSheetViewModelFactory(20, 0, 0)).get(OMRSheet.class);
 
         final AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "omr").build();

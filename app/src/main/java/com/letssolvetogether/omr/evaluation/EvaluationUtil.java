@@ -79,7 +79,7 @@ public class EvaluationUtil {
     }
 
     public int getScore(){
-        getStudentAnswers(omrSheet);
+        getStudentAnswers(omrSheet.getMatOMRSheet());
         correctAnswers = omrSheet.getCorrectAnswers();
         int score = calculateScore(studentAnswers, correctAnswers);
         return score;
@@ -134,13 +134,10 @@ public class EvaluationUtil {
         return pt;
     }
 
-    private void getStudentAnswers(OMRSheet omrSheet){
-
-        Mat mat = new Mat();
-        Utils.bitmapToMat(omrSheet.getBmpOMRSheet(), mat);
+    public void getStudentAnswers(Mat matOMR){
 
         Mat matGaussianBlur = new Mat();
-        Imgproc.GaussianBlur(mat, matGaussianBlur, new Size(5,5), 3, 2.5);
+        Imgproc.GaussianBlur(matOMR, matGaussianBlur, new Size(5,5), 3, 2.5);
 
         //convert to gray
         Mat matGray = new Mat();
@@ -160,8 +157,6 @@ public class EvaluationUtil {
             thresholdValue = 80;
 
         Core.inRange(matGray,new Scalar(thresholdValue, thresholdValue, thresholdValue), new Scalar(255,255,255), matThresholded);
-
-        Point ptrect = new Point();
 
         studentAnswers = new boolean[omrSheet.getNumberOfQuestions()][optionsPerQuestions];
         for(int k = 0; k < omrSheet.getNumberOfBlocks(); k++) {

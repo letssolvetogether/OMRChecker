@@ -28,15 +28,13 @@ public class DetectionUtil {
         omrSheetCorners = new OMRSheetCorners();
     }
 
-    public OMRSheetCorners detectOMRSheetCorners(Bitmap bmpOMRSheet) {
+    public OMRSheetCorners detectOMRSheetCorners(Mat matOMR) {
 
         Circle circle[];
-        Mat img = new Mat();
 
-        Utils.bitmapToMat(bmpOMRSheet, img);
         Mat matGaussianBlur = new Mat();
 
-        Imgproc.GaussianBlur(img, matGaussianBlur, new org.opencv.core.Size(5, 5), 3, 2.5);
+        Imgproc.GaussianBlur(matOMR, matGaussianBlur, new org.opencv.core.Size(5, 5), 3, 2.5);
 
         //convert to gray
         Mat matGray = new Mat();
@@ -52,10 +50,10 @@ public class DetectionUtil {
         int minRadiusCornerCircle;
         int maxRadiusCornerCircle;
 
-        minRadiusCornerCircle = bmpOMRSheet.getWidth() / 48;
-        maxRadiusCornerCircle = bmpOMRSheet.getWidth() / 32;
+        minRadiusCornerCircle = matOMR.cols() / 48;
+        maxRadiusCornerCircle = matOMR.cols() / 32;
 
-        Imgproc.HoughCircles(matGray, matCircles, Imgproc.CV_HOUGH_GRADIENT, 0.9, bmpOMRSheet.getWidth()/2, 15, 30, minRadiusCornerCircle, maxRadiusCornerCircle);
+        Imgproc.HoughCircles(matGray, matCircles, Imgproc.CV_HOUGH_GRADIENT, 0.9, matOMR.cols()/2, 15, 30, minRadiusCornerCircle, maxRadiusCornerCircle);
 
         if(matCircles.cols() != 4){
             return null;
@@ -103,13 +101,13 @@ public class DetectionUtil {
         }
     }
 
-    public Bitmap findROIofOMR(OMRSheet omrSheet){
+    public Mat findROIofOMR(OMRSheet omrSheet){
 
         Point ptCornerPoints[];
         int previewWidth = omrSheet.getWidth();
         int previewHeight = omrSheet.getHeight();
 
-        Mat mat = new Mat(previewWidth, previewHeight, CvType.CV_8UC4);
+        Mat mat = omrSheet.getMatOMRSheet();
         Mat outputMat = new Mat(previewWidth, previewHeight, CvType.CV_8UC4);
 
         List<Point> src = new ArrayList<>();
@@ -122,8 +120,6 @@ public class DetectionUtil {
         for(int i=0; i< ptCornerPoints.length; i++){
             src.add(ptCornerPoints[i]);
         }
-
-        Utils.bitmapToMat(omrSheet.getBmpOMRSheet(), mat);
 
         Mat startM = Converters.vector_Point2f_to_Mat(src);
 
@@ -144,8 +140,7 @@ public class DetectionUtil {
 
         Imgproc.warpPerspective(mat, outputMat, perspectiveTransform, new Size(previewWidth, previewHeight));
 
-        Utils.matToBitmap(outputMat,omrSheet.getBmpOMRSheet());
-        return omrSheet.getBmpOMRSheet();
+        return outputMat;
     }
 
     private Point[] getCornerPoints(OMRSheetCorners omrSheetCorners){

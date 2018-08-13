@@ -4,11 +4,18 @@ import android.arch.lifecycle.ViewModel;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import org.opencv.core.Mat;
+
 public class OMRSheet extends ViewModel {
 
     private static String TAG="OMRSheet";
 
     private Bitmap bmpOMRSheet;
+    private Mat matOMRSheet;
+
+    private int width;
+    private int height;
+
     private OMRSheetCorners omrSheetCorners;
     private OMRSheetBlock omrSheetBlock;
 
@@ -24,11 +31,19 @@ public class OMRSheet extends ViewModel {
     public OMRSheet() {}
 
     public int getWidth(){
-        return bmpOMRSheet.getWidth();
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
     }
 
     public int getHeight(){
-        return bmpOMRSheet.getHeight();
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     public Bitmap getBmpOMRSheet() {
@@ -53,8 +68,8 @@ public class OMRSheet extends ViewModel {
 
     public void setOmrSheetBlock() {
 
-        int w = bmpOMRSheet.getWidth();
-        int h = bmpOMRSheet.getHeight();
+        int w = getWidth();
+        int h = getHeight();
 
         omrSheetBlock = new OMRSheetBlock();
 
@@ -85,6 +100,14 @@ public class OMRSheet extends ViewModel {
 
         Log.i(TAG,"xDistanceBetweenCircles - " + (int)(w/14.77));
         Log.i(TAG,"yDistanceBetweenCircles - " + (int)(h/26.6));
+    }
+
+    public Mat getMatOMRSheet() {
+        return matOMRSheet;
+    }
+
+    public void setMatOMRSheet(Mat matOMRSheet) {
+        this.matOMRSheet = matOMRSheet;
     }
 
     public int getNumberOfBlocks() {

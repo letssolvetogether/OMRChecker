@@ -17,6 +17,9 @@ import com.letssolvetogether.omr.object.OMRSheet;
 import com.letssolvetogether.omr.object.OMRSheetCorners;
 import com.letssolvetogether.omr.utils.PrereqChecks;
 
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+
 public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     private static String TAG="ProcessOMRSheetAsyncTask";
@@ -24,6 +27,7 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
     OMRSheet omrSheet;
     OMRSheetCorners omrSheetCorners;
     Bitmap bmpOMRSheet;
+    Mat matOMR;
     CameraView mCameraView;
     //CustomView customView;
     LinearLayout linearLayout;
@@ -56,7 +60,9 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
             return false;
         }
 
-        omrSheetCorners = detectionUtil.detectOMRSheetCorners(bmpOMRSheet);
+        matOMR = new Mat();
+        Utils.bitmapToMat(bmpOMRSheet,matOMR);
+        omrSheetCorners = detectionUtil.detectOMRSheetCorners(matOMR);
         return true;
     }
 
@@ -66,12 +72,18 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
         if(omrSheetCorners == null){
             mCameraView.requestPreviewFrame();
         }else{
-
-            omrSheet.setBmpOMRSheet(bmpOMRSheet);
+            omrSheet.setMatOMRSheet(matOMR);
+            omrSheet.setWidth(matOMR.cols());
+            omrSheet.setHeight(matOMR.rows());
             omrSheet.setOmrSheetBlock();
             omrSheet.setOmrSheetCorners(omrSheetCorners);
 
-            detectionUtil.findROIofOMR(omrSheet);
+            Mat roiOfOMR = detectionUtil.findROIofOMR(omrSheet);
+            omrSheet.setMatOMRSheet(roiOfOMR);
+
+            Bitmap bmp = Bitmap.createBitmap(roiOfOMR.cols(), roiOfOMR.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(roiOfOMR, bmp);
+            omrSheet.setBmpOMRSheet(bmp);
 
             int score = new EvaluationUtil(omrSheet).getScore();
 
@@ -96,8 +108,7 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
             dialogOMRSheetDisplay.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialogInterface) {
-                    ProcessOMRSheetAsyncTask processOMRSheetAsyncTask = new ProcessOMRSheetAsyncTask(mCameraView, omrSheet);
-                    processOMRSheetAsyncTask.execute();
+                    mCameraView.requestPreviewFrame();
                 }
             });
 
