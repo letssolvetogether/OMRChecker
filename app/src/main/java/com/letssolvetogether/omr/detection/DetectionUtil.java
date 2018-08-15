@@ -8,13 +8,12 @@ import com.letssolvetogether.omr.object.Circle;
 import com.letssolvetogether.omr.object.OMRSheet;
 import com.letssolvetogether.omr.object.OMRSheetCorners;
 import com.letssolvetogether.omr.utils.OMRSheetUtil;
+import com.letssolvetogether.omr.utils.PrereqChecks;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfFloat;
-import org.opencv.core.MatOfInt;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
@@ -207,7 +206,7 @@ public class DetectionUtil {
         Mat kernel = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_ELLIPSE, new Size(8,8));
         Imgproc.morphologyEx(matGray, matGray, Imgproc.MORPH_CLOSE,kernel);
 
-        double median = getMedian(matGray);
+        double median = new PrereqChecks().brightness(matGray);
 
         Mat matThresholded = new Mat();
         int thresholdValue;
@@ -242,34 +241,6 @@ public class DetectionUtil {
 //        storeImage(matGray,"omr_gray");
 //        storeImage(matThresholded,"omr_thrshold");
         return studentAnswers;
-    }
-
-    private int getMedian(Mat mat) {
-
-        ArrayList<Mat> listOfMat = new ArrayList<>();
-        listOfMat.add(mat);
-        MatOfInt channels = new MatOfInt(0);
-        Mat mask = new Mat();
-        Mat hist = new Mat(256, 1, CvType.CV_8UC1);
-        MatOfInt histSize = new MatOfInt(256);
-        MatOfFloat ranges = new MatOfFloat(0, 256);
-
-        Imgproc.calcHist(listOfMat, channels, mask, hist, histSize, ranges);
-
-        double t = mat.rows() * mat.cols() / 2;
-        double total = 0;
-        int med = -1;
-        for (int row = 0; row < hist.rows(); row++) {
-            double val = hist.get(row, 0)[0];
-            if ((total <= t) && (total + val >= t)) {
-                med = row;
-                break;
-            }
-            total += val;
-        }
-
-        Log.d(TAG, String.format("Median = %d", med));
-        return med;
     }
 
     public void storeImage(Mat mat, String imageName){

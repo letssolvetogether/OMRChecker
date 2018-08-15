@@ -20,7 +20,9 @@ public class PrereqChecks {
     private final static int BRIGHTNESS_VALUE = 60;
 
     public boolean isBlurry(Bitmap bmp){
-        int sharpness = sharpness(bmp);
+        Mat mat = new Mat();
+        Utils.bitmapToMat(bmp,mat);
+        int sharpness = sharpness(mat);
         Log.d("sharpness",String.valueOf(sharpness));
 
         if(sharpness <= BLUR_VALUE)
@@ -30,8 +32,10 @@ public class PrereqChecks {
     }
 
     public boolean hasLowBrightness(Bitmap bmp){
-        int brightness = brightness(bmp);
-        Log.d("sharpness",String.valueOf(brightness));
+        Mat mat = new Mat();
+        Utils.bitmapToMat(bmp,mat);
+        int brightness = brightness(mat);
+        Log.d("brightness",String.valueOf(brightness));
 
         if(brightness <= BRIGHTNESS_VALUE)
             return true;
@@ -39,15 +43,12 @@ public class PrereqChecks {
             return false;
     }
 
-    public int sharpness(Bitmap bmp){
+    public int sharpness(Mat mat){
 
-        Mat mat, matGray, matLaplacian;
+        Mat matGray, matLaplacian;
 
-        mat = new Mat();
         matLaplacian = new Mat();
         matGray=new Mat();
-
-        Utils.bitmapToMat(bmp,mat);
 
         Imgproc.cvtColor(mat, matGray, Imgproc.COLOR_BGR2GRAY);
 
@@ -63,13 +64,12 @@ public class PrereqChecks {
         return (int) Math.pow(stddev.get(0,0)[0],2);
     }
 
-    public int brightness(Bitmap bmp){
+    public int brightness(Mat mat){
 
-        Mat mat = new Mat();
         ArrayList<Mat> listOfMat = new ArrayList<>();
         listOfMat.add(mat);
         MatOfInt channels = new MatOfInt(0);
-        Utils.bitmapToMat(bmp, mat);
+
         Mat mask = new Mat();
         Mat hist = new Mat(256, 1, CvType.CV_8UC1);
         MatOfInt histSize = new MatOfInt(256);
