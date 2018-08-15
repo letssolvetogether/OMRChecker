@@ -96,25 +96,28 @@ public class DetectionUtil {
             Log.i("Detection",pt.x+","+pt.y+","+radius);
         }
 
-        getCircleCentersInOrder(circle, omrSheetCorners);
+        getCircleCentersInOrder(circle, omrSheetCorners, matOMR.cols(), matOMR.rows());
         return omrSheetCorners;
     }
 
-    private void getCircleCentersInOrder(Circle mCircles[], OMRSheetCorners omrSheetCorners) {
+    private void getCircleCentersInOrder(Circle mCircles[], OMRSheetCorners omrSheetCorners, int w, int h) {
         double cx, cy;
+
+        w = w/2;
+        h = h/2;
 
         for(int i=0; i< mCircles.length; i++){
             cx = mCircles[i].getCx();
             cy = mCircles[i].getCy();
 
-            if(cy <= 600){
-                if(cx <= 400){
+            if(cy <= h){
+                if(cx <= w){
                     omrSheetCorners.setTopLeftCorner(new Point(cx,cy));
                 }else{
                     omrSheetCorners.setTopRightCorner(new Point(cx,cy));
                 }
             }else{
-                if(cx <= 400){
+                if(cx <= w){
                     omrSheetCorners.setBottomLeftCorner(new Point(cx,cy));
                 }else{
                     omrSheetCorners.setBottomRightCorner(new Point(cx,cy));

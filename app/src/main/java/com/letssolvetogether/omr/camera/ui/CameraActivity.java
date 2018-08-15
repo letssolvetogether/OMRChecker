@@ -26,15 +26,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.cameraview.AspectRatio;
 import com.google.android.cameraview.CameraView;
-import com.letssolvetogether.omr.object.OMRSheetViewModelFactory;
-import com.letssolvetogether.omr.omrkey.db.AppDatabase;
-import com.letssolvetogether.omr.omrkey.db.OMRKey;
-import com.letssolvetogether.omr.utils.PrereqChecks;
 import com.letssolvetogether.omr.ProcessOMRSheetAsyncTask;
 import com.letssolvetogether.omr.main.R;
 import com.letssolvetogether.omr.object.OMRSheet;
+import com.letssolvetogether.omr.object.OMRSheetViewModelFactory;
+import com.letssolvetogether.omr.omrkey.db.AppDatabase;
+import com.letssolvetogether.omr.omrkey.db.OMRKey;
 import com.letssolvetogether.omr.utils.AnswersUtils;
+import com.letssolvetogether.omr.utils.PrereqChecks;
 
 import org.opencv.android.OpenCVLoader;
 
@@ -51,6 +52,7 @@ public class CameraActivity extends AppCompatActivity implements
     private static final boolean AUTO_HIDE = true;
 
     /**
+     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
      * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
      * user interaction before hiding the system UI.
      */
@@ -147,6 +149,7 @@ public class CameraActivity extends AppCompatActivity implements
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mCameraView = findViewById(R.id.fullscreen_content);
+        mCameraView.setAspectRatio(AspectRatio.of(4,3));
 
         if (mCameraView != null) {
             mCameraView.addCallback(mCallback);
