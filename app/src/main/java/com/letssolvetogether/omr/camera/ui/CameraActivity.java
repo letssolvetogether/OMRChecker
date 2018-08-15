@@ -34,7 +34,7 @@ import com.letssolvetogether.omr.utils.PrereqChecks;
 import com.letssolvetogether.omr.ProcessOMRSheetAsyncTask;
 import com.letssolvetogether.omr.main.R;
 import com.letssolvetogether.omr.object.OMRSheet;
-import com.letssolvetogether.omr.utils.OMRUtils;
+import com.letssolvetogether.omr.utils.AnswersUtils;
 
 import org.opencv.android.OpenCVLoader;
 
@@ -179,7 +179,7 @@ public class CameraActivity extends AppCompatActivity implements
 
                     if (strCorrectAnswers[0] != null && !strCorrectAnswers[0].isEmpty()) {
 
-                        int[] answers = OMRUtils.strtointAnswers(strCorrectAnswers[0]);
+                        int[] answers = AnswersUtils.strtointAnswers(strCorrectAnswers[0]);
 
                         omrSheet.setNumberOfQuestions(20);
                         omrSheet.setCorrectAnswers(answers);

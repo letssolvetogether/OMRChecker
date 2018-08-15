@@ -1,5 +1,6 @@
 package com.letssolvetogether.omr.main;
 
+import com.letssolvetogether.omr.detection.DetectionUtil;
 import com.letssolvetogether.omr.evaluation.EvaluationUtil;
 import com.letssolvetogether.omr.object.OMRSheet;
 
@@ -22,8 +23,10 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class OMRUnitTest {
-    Mat matOMR;
+    Mat roiOfOMR;
     OMRTestActivity omrTestActivity;
+    boolean[][] studentAnswers;
+    int[] correctAnswers;
 
     @Before
     public void initOpenCV() {
@@ -37,15 +40,17 @@ public class OMRUnitTest {
         OMRSheet omrSheet = new OMRSheet();
         omrSheet.setNumberOfQuestions(20);
         omrSheet.setOmrSheetBlock();
-        omrSheet.setCorrectAnswers(new int[]{1,0,3,0,2,4,0,0,0,0,5,3,0,0,0,0,0,0,0,5});
+        correctAnswers = new int[]{1,0,3,0,2,4,0,0,0,0,5,3,0,0,0,0,0,0,0,5};
 
         for(int i=1;i<=3;i++){
-            matOMR = Imgcodecs.imread("testimages/omr_"+i+".jpg");
-            omrSheet.setMatOMRSheet(matOMR);
-            omrSheet.setWidth(matOMR.cols());
-            omrSheet.setHeight(matOMR.rows());
+            roiOfOMR = Imgcodecs.imread("testimages/omr_"+i+".jpg");
+            omrSheet.setMatOMRSheet(roiOfOMR);
+            omrSheet.setWidth(roiOfOMR.cols());
+            omrSheet.setHeight(roiOfOMR.rows());
             omrSheet.setOmrSheetBlock();
-            int score = new EvaluationUtil(omrSheet).getScore();
+
+            studentAnswers = new DetectionUtil(omrSheet).getStudentAnswers(roiOfOMR);
+            int score = new EvaluationUtil(omrSheet).calculateScore(studentAnswers,correctAnswers);
             assertEquals(score,7);
         }
     }

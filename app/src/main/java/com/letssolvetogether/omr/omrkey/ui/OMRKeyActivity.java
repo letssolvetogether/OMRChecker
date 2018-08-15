@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.letssolvetogether.omr.omrkey.db.AppDatabase;
 import com.letssolvetogether.omr.omrkey.db.OMRKey;
 import com.letssolvetogether.omr.main.R;
-import com.letssolvetogether.omr.utils.OMRUtils;
+import com.letssolvetogether.omr.utils.AnswersUtils;
 
 public class OMRKeyActivity extends AppCompatActivity implements RadioButton.OnCheckedChangeListener{
 
@@ -131,7 +131,7 @@ public class OMRKeyActivity extends AppCompatActivity implements RadioButton.OnC
                 int correctAnswer;
                 CheckBox checkBox;
 
-                answers = OMRUtils.strtointAnswers(strCorrectAnswers[0]);
+                answers = AnswersUtils.strtointAnswers(strCorrectAnswers[0]);
 
                 if(answers != null){
                     for(int i=0; i< answers.length; i++){
@@ -161,7 +161,7 @@ public class OMRKeyActivity extends AppCompatActivity implements RadioButton.OnC
             }
         }
 
-        String strCorrectAnswers = OMRUtils.inttostrAnswers(correctAnswers);
+        String strCorrectAnswers = AnswersUtils.inttostrAnswers(correctAnswers);
 
         if(strCorrectAnswers != null){
             final AppDatabase db = Room.databaseBuilder(getApplicationContext(),

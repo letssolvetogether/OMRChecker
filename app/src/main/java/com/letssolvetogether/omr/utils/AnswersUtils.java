@@ -1,6 +1,6 @@
 package com.letssolvetogether.omr.utils;
 
-public class OMRUtils {
+public class AnswersUtils {
 
     public static int[] strtointAnswers(String strAnswers){
 

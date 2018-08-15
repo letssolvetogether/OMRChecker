@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.google.android.cameraview.CameraView;
 import com.letssolvetogether.omr.detection.DetectionUtil;
+import com.letssolvetogether.omr.drawing.DrawingUtil;
 import com.letssolvetogether.omr.evaluation.EvaluationUtil;
 import com.letssolvetogether.omr.object.OMRSheet;
 import com.letssolvetogether.omr.object.OMRSheetCorners;
@@ -34,12 +35,14 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
     ImageView iv;
     DetectionUtil detectionUtil;
     PrereqChecks prereqChecks;
+    boolean[][] studentAnswers;
+    int score;
 
     public ProcessOMRSheetAsyncTask(CameraView mCameraView, OMRSheet omrSheet) {
         this.omrSheet = omrSheet;
         this.mCameraView = mCameraView;
 
-        detectionUtil = new DetectionUtil();
+        detectionUtil = new DetectionUtil(omrSheet);
         prereqChecks = new PrereqChecks();
 
         linearLayout = new LinearLayout(mCameraView.getContext());
@@ -85,7 +88,11 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
             Utils.matToBitmap(roiOfOMR, bmp);
             omrSheet.setBmpOMRSheet(bmp);
 
-            int score = new EvaluationUtil(omrSheet).getScore();
+            studentAnswers = new DetectionUtil(omrSheet).getStudentAnswers(roiOfOMR);
+
+            score = new EvaluationUtil(omrSheet).calculateScore(studentAnswers, omrSheet.getCorrectAnswers());
+
+            new DrawingUtil(omrSheet).drawRectangle(studentAnswers);
 
             final AlertDialog.Builder dialogOMRSheetDisplay = new AlertDialog.Builder(mCameraView.getContext());
 
