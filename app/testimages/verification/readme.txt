@@ -1,0 +1,1 @@
+This directory will contain RGB, Gray and Thresholded image while running JUnit Test case.

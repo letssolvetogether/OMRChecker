@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
 
+import com.letssolvetogether.omr.OMRSheetConstants;
 import com.letssolvetogether.omr.object.Circle;
 import com.letssolvetogether.omr.object.OMRSheet;
 import com.letssolvetogether.omr.object.OMRSheetCorners;
@@ -18,6 +19,7 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.utils.Converters;
 
@@ -35,7 +37,7 @@ public class DetectionUtil {
     private int numberOfQuestions;
     private int questionsPerBlock;
 
-    private boolean[][] studentAnswers;
+    private byte[][] studentAnswers;
 
     private OMRSheetCorners omrSheetCorners;
     private OMRSheet omrSheet;
@@ -197,7 +199,7 @@ public class DetectionUtil {
         return pt;
     }
 
-    public boolean[][] getStudentAnswers(Mat matOMR){
+    public byte[][] getStudentAnswers(Mat matOMR){
 
         Mat matGaussianBlur = new Mat();
         Imgproc.GaussianBlur(matOMR, matGaussianBlur, new Size(5,5), 3, 2.5);
@@ -216,12 +218,16 @@ public class DetectionUtil {
 
         if(median <= 130)
             thresholdValue = (int)median/2;
-        else
+        else if(median <= 140)
             thresholdValue = 80;
+        else
+            thresholdValue = 85;
+
+        System.out.println("Median: "+median);
 
         Core.inRange(matGray,new Scalar(thresholdValue, thresholdValue, thresholdValue), new Scalar(255,255,255), matThresholded);
 
-        studentAnswers = new boolean[numberOfQuestions][optionsPerQuestions];
+        studentAnswers = new byte[numberOfQuestions][optionsPerQuestions];
         for(int k = 0; k < omrSheet.getNumberOfBlocks(); k++) {
             for(int i = 0; i< questionsPerBlock; i++) {
                 for (int j = 0; j < optionsPerQuestions; j++) {
@@ -229,17 +235,32 @@ public class DetectionUtil {
                     Point leftTopRectPoint = pt[0];
                     Point rightBottomRectPoint = pt[1];
 
+                    //Imgproc.rectangle(matOMR,leftTopRectPoint,rightBottomRectPoint,new Scalar(255,0,0));
                     Rect rect = new Rect(leftTopRectPoint, rightBottomRectPoint);
-                    int nonZeroCount = Core.countNonZero(matThresholded.submat(rect));
-                    Log.d("nonzero", "i= " + (i +1) + " j= " + (j+1) + " " + nonZeroCount);
-                    if (nonZeroCount <= omrSheet.getNumberOfFilledPixelsInBoundingSquare()) {
-                        studentAnswers[i + (questionsPerBlock * k)][j] = true;
+                    int noOfWhitePixels = Core.countNonZero(matThresholded.submat(rect));
+                    int totalPixels = omrSheet.getTotalPixelsInBoundingSquare();
+                    int noOfBlackPixels = totalPixels - noOfWhitePixels;
+                    Log.d("noOfBlackPixels", "i= " + (i +1) + " j= " + (j+1) + " " + noOfBlackPixels);
+                    //NOT FILLED
+                    if(noOfWhitePixels != totalPixels){
+                        if (noOfBlackPixels >= omrSheet.getRequiredBlackPixelsInBoundingSquare()) {
+                            //FULL
+                            studentAnswers[i + (questionsPerBlock * k)][j] = OMRSheetConstants.CIRCLE_FILLED_FULL;
+                            System.out.println("noOfBlackPixels - " + "i= " + (i +1) + " j= " + (j+1) + " " + noOfBlackPixels);
+                        }else if(noOfBlackPixels >= 50){
+                            //SEMI
+                            studentAnswers[i + (questionsPerBlock * k)][j] = OMRSheetConstants.CIRCLE_FILLED_SEMI;
+                            System.out.println("noOfBlackPixels - " + "i= " + (i +1) + " j= " + (j+1) + " " + noOfBlackPixels);
+                        }
                     }
                 }
             }
         }
 
         //just for testing purpose
+        storeImage1(matOMR,"omr_rgb");
+        storeImage1(matGray,"omr_gray");
+        storeImage1(matThresholded,"omr_threshold");
 //        storeImage(matOMR,"omr_orig");
 //        storeImage(matGray,"omr_gray");
 //        storeImage(matThresholded,"omr_thrshold");
@@ -268,5 +289,9 @@ public class DetectionUtil {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void storeImage1(Mat mat, String imageName){
+        Imgcodecs.imwrite("testimages\\verification\\"+imageName+".jpg", mat);
     }
 }

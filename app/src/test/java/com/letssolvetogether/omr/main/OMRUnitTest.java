@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 public class OMRUnitTest {
     Mat roiOfOMR;
     OMRTestActivity omrTestActivity;
-    boolean[][] studentAnswers;
+    byte[][] studentAnswers;
     int[] correctAnswers;
 
     @Before

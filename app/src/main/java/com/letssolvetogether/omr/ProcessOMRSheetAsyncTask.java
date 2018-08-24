@@ -35,7 +35,7 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
     ImageView iv;
     DetectionUtil detectionUtil;
     PrereqChecks prereqChecks;
-    boolean[][] studentAnswers;
+    byte[][] studentAnswers;
     int score;
 
     public ProcessOMRSheetAsyncTask(CameraView mCameraView, OMRSheet omrSheet) {

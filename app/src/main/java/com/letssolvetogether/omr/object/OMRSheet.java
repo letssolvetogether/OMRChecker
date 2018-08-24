@@ -24,7 +24,8 @@ public class OMRSheet extends ViewModel {
     private int questionsPerBlock = 10;
     private int widthOfBoundingSquareForCircle;
 
-    private int numberOfFilledPixelsInBoundingSquare;
+    private int requiredBlackPixelsInBoundingSquare;
+    private int totalPixelsInBoundingSquare;
 
     private int[] correctAnswers;
 
@@ -135,10 +136,14 @@ public class OMRSheet extends ViewModel {
         return questionsPerBlock;
     }
 
-    public int getNumberOfFilledPixelsInBoundingSquare() {
-        int totalPixelsInBoundingSquare = getWidthOfBoundingSquareForCircle() * getWidthOfBoundingSquareForCircle();
-        numberOfFilledPixelsInBoundingSquare = (int) (totalPixelsInBoundingSquare * 0.8);
-        return numberOfFilledPixelsInBoundingSquare;
+    public int getTotalPixelsInBoundingSquare() {
+        totalPixelsInBoundingSquare = getWidthOfBoundingSquareForCircle() * getWidthOfBoundingSquareForCircle();
+        return totalPixelsInBoundingSquare;
+    }
+
+    public int getRequiredBlackPixelsInBoundingSquare() {
+        requiredBlackPixelsInBoundingSquare = (int) (getTotalPixelsInBoundingSquare() * 0.22);
+        return requiredBlackPixelsInBoundingSquare;
     }
 
     public int[] getCorrectAnswers() {
