@@ -1,5 +1,7 @@
 package com.letssolvetogether.omr.main;
 
+import android.support.constraint.BuildConfig;
+
 import com.letssolvetogether.omr.detection.DetectionUtil;
 import com.letssolvetogether.omr.evaluation.EvaluationUtil;
 import com.letssolvetogether.omr.object.OMRSheet;
@@ -42,7 +44,8 @@ public class OMRUnitTest {
         omrSheet.setOmrSheetBlock();
         correctAnswers = new int[]{1,0,3,0,2,4,0,0,0,0,5,3,0,0,0,0,0,0,0,5};
 
-        for(int i=1;i<=3;i++){
+        for(int i=1;i<=2;i++){
+            System.out.println("i = "+i);
             roiOfOMR = Imgcodecs.imread("testimages/omr_"+i+".jpg");
             omrSheet.setMatOMRSheet(roiOfOMR);
             omrSheet.setWidth(roiOfOMR.cols());
@@ -53,5 +56,43 @@ public class OMRUnitTest {
             int score = new EvaluationUtil(omrSheet).calculateScore(studentAnswers,correctAnswers);
             assertEquals(score,7);
         }
+    }
+
+    @Test
+    public void testSingleOMRScore1(){
+        //OMRTestActivity is not added in manifest file
+        OMRSheet omrSheet = new OMRSheet();
+        omrSheet.setNumberOfQuestions(20);
+        omrSheet.setOmrSheetBlock();
+        correctAnswers = new int[]{1,2,3,4,2,4,2,5,1,0,5,3,5,3,2,0,0,4,0,5};
+
+        roiOfOMR = Imgcodecs.imread("testimages/omr_orig.jpg");
+        omrSheet.setMatOMRSheet(roiOfOMR);
+        omrSheet.setWidth(roiOfOMR.cols());
+        omrSheet.setHeight(roiOfOMR.rows());
+        omrSheet.setOmrSheetBlock();
+
+        studentAnswers = new DetectionUtil(omrSheet).getStudentAnswers(roiOfOMR);
+        int score = new EvaluationUtil(omrSheet).calculateScore(studentAnswers,correctAnswers);
+        assertEquals(score,14);
+    }
+
+    @Test
+    public void testSingleOMRScore2(){
+        //OMRTestActivity is not added in manifest file
+        OMRSheet omrSheet = new OMRSheet();
+        omrSheet.setNumberOfQuestions(20);
+        omrSheet.setOmrSheetBlock();
+        correctAnswers = new int[]{1,2,3,2,4,5,4,3,2,1,5,4,3,2,1,2,3,4,5,4};
+
+        roiOfOMR = Imgcodecs.imread("testimages/omr_5.jpg");
+        omrSheet.setMatOMRSheet(roiOfOMR);
+        omrSheet.setWidth(roiOfOMR.cols());
+        omrSheet.setHeight(roiOfOMR.rows());
+        omrSheet.setOmrSheetBlock();
+
+        studentAnswers = new DetectionUtil(omrSheet).getStudentAnswers(roiOfOMR);
+        int score = new EvaluationUtil(omrSheet).calculateScore(studentAnswers,correctAnswers);
+        assertEquals(score,19);
     }
 }
