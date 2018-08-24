@@ -41,7 +41,7 @@ public class InitTrueTimeAsyncTask extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
         if(!TrueTime.isInitialized()){
             final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("In order to check free validity period of this App, we require you to turn on internet and then try again");
+            builder.setMessage("In order to check free validity period of this App, we require you to turn on internet once and then try again");
             builder.setNeutralButton("Try Again", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dlg, int sumthin) {
                 }
@@ -62,15 +62,17 @@ public class InitTrueTimeAsyncTask extends AsyncTask<Void, Void, Void> {
             Log.i(TAG,"TrueTime Intialized - " + date);
 
             //Caution: if lastFreeDate and trueTimeDate is same, it will exit.
-            Date lastFreeDate = new Date(118,8,3);  //Sep 2, 2018
+            Date lastFreeDate = new Date(118,11,31);  //Dec 30, 2018
             boolean validPeriodExpired = trueTimeDate.before(lastFreeDate);
 
             if(!validPeriodExpired){
                 //Toast.makeText(context,"Your free validity period is expired", Toast.LENGTH_SHORT).show();
                 final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("Your free validity period is expired");
-                builder.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dlg, int sumthin) {
+                builder.setMessage("Your free validity period is expired.");
+                builder.setNeutralButton("Ok",null);
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
                         System.exit(1);
                         Log.i(TAG,"Exit");
                     }
