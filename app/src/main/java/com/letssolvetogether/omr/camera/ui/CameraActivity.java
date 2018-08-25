@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.persistence.room.Room;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -21,9 +22,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.google.android.cameraview.AspectRatio;
@@ -164,6 +168,49 @@ public class CameraActivity extends AppCompatActivity implements
         });
     }
 
+    private void displayTips(){
+
+        final CheckBox cbDoNotShowAgain;
+        final String PREFS_NAME = "INFO_TIPS";
+        AlertDialog.Builder dialogTips = new AlertDialog.Builder(this);
+        LayoutInflater adbInflater = LayoutInflater.from(this);
+        View doNotShowLayout = adbInflater.inflate(R.layout.checkbox, null);
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String skipMessage = settings.getString("skipMessage", "NOT checked");
+
+        cbDoNotShowAgain = doNotShowLayout.findViewById(R.id.skip);
+        dialogTips.setView(doNotShowLayout);
+        dialogTips.setTitle("Tips:");
+        String tipsMsg = "Please make sure the light on OMR Sheet is proper (not too bright, not too low)<br><br>And there is no shadow.<br><br>";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            dialogTips.setMessage(Html.fromHtml(tipsMsg, Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            dialogTips.setMessage(Html.fromHtml(tipsMsg));
+        }
+
+        dialogTips.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                String checkBoxResult = "NOT checked";
+
+                if (cbDoNotShowAgain.isChecked()) {
+                    checkBoxResult = "checked";
+                }
+
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor = settings.edit();
+
+                editor.putString("skipMessage", checkBoxResult);
+                editor.commit();
+
+                return;
+            }
+        });
+
+        if (!skipMessage.equals("checked")) {
+            dialogTips.show();
+        }
+    }
+
     private void loadCorrectAnswers(){
 
         omrSheet = ViewModelProviders.of(this, new OMRSheetViewModelFactory(20, 0, 0)).get(OMRSheet.class);
@@ -186,6 +233,8 @@ public class CameraActivity extends AppCompatActivity implements
 
                         omrSheet.setNumberOfQuestions(20);
                         omrSheet.setCorrectAnswers(answers);
+                    }else{
+                        Toast.makeText(getApplicationContext(),"No answers",Toast.LENGTH_LONG).show();
                     }
                 }
                 return null;
@@ -215,6 +264,7 @@ public class CameraActivity extends AppCompatActivity implements
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             mCameraView.start();
+            displayTips();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
             CameraActivity.ConfirmationDialogFragment

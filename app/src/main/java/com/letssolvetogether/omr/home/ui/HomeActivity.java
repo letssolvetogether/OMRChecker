@@ -64,40 +64,20 @@ public class HomeActivity extends AppCompatActivity{
     }
 
     public void displayValidityPeriodDialog(){
+        boolean firstrun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("firstrun", true);
+        if (firstrun){
+            // Save the state
+            getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                    .edit()
+                    .putBoolean("firstrun", false)
+                    .commit();
 
-        final CheckBox cbDoNotShowAgain;
-        final String PREFS_NAME = "INFO_VALIDITY_DATE";
-        AlertDialog.Builder dialogDoNotShow = new AlertDialog.Builder(this);
-        LayoutInflater adbInflater = LayoutInflater.from(this);
-        View doNotShowLayout = adbInflater.inflate(R.layout.checkbox, null);
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        String skipMessage = settings.getString("skipMessage", "NOT checked");
-
-        cbDoNotShowAgain = doNotShowLayout.findViewById(R.id.skip);
-        dialogDoNotShow.setView(doNotShowLayout);
-        dialogDoNotShow.setTitle("Attention");
-        dialogDoNotShow.setMessage(Html.fromHtml("You can use this app for free until December 30,2018"));
-
-        dialogDoNotShow.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                String checkBoxResult = "NOT checked";
-
-                if (cbDoNotShowAgain.isChecked()) {
-                    checkBoxResult = "checked";
-                }
-
-                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-                SharedPreferences.Editor editor = settings.edit();
-
-                editor.putString("skipMessage", checkBoxResult);
-                editor.commit();
-
-                return;
-            }
-        });
-
-        if (!skipMessage.equals("checked")) {
-            dialogDoNotShow.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            //Display Dialog
+            AlertDialog.Builder dialogTips = new AlertDialog.Builder(HomeActivity.this);
+            dialogTips.setTitle("Note:");
+            dialogTips.setMessage("You can use this app for free until December 30,2018.");
+            dialogTips.setNeutralButton("Ok",null);
+            dialogTips.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialogInterface) {
                     if(!TrueTime.isInitialized()){
@@ -105,13 +85,11 @@ public class HomeActivity extends AppCompatActivity{
                     }
                 }
             });
-            dialogDoNotShow.show();
-        }else{
-            if(!TrueTime.isInitialized()){
+            dialogTips.show();
+        }else {
+            if (!TrueTime.isInitialized()) {
                 new InitTrueTimeAsyncTask(HomeActivity.this).execute();
             }
         }
-
-        super.onResume();
     }
 }
