@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.util.Log;
 
 import com.instacart.library.truetime.TrueTime;
@@ -41,7 +42,11 @@ public class InitTrueTimeAsyncTask extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
         if(!TrueTime.isInitialized()){
             final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("In order to check free validity period of this App, we require you to turn on internet once and then try again");
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                builder.setMessage(Html.fromHtml("In order to check free validity period of this App, we require you to <b>turn on internet</b> once and then try again.<br><br>Because you are too smart and make me fool .. ", Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                builder.setMessage(Html.fromHtml("In order to check free validity period of this App, we require you to <b>turn on internet</b> once and then try again.<br><br>Because you are too smart and make me fool .. ;)"));
+            }
             builder.setNeutralButton("Try Again", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dlg, int sumthin) {
                 }

@@ -1,13 +1,19 @@
 package com.letssolvetogether.omr.home.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 
 import com.instacart.library.truetime.TrueTime;
 import com.letssolvetogether.omr.main.R;
@@ -46,16 +52,66 @@ public class HomeActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        if(!TrueTime.isInitialized()){
-            new InitTrueTimeAsyncTask(HomeActivity.this).execute();
-        }
-
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        displayValidityPeriodDialog();
     }
 
     public void displayAnswerKey(View view){
         Intent omrKeyActivity = new Intent(this, OMRKeyActivity.class);
         startActivity(omrKeyActivity);
+    }
+
+    public void displayValidityPeriodDialog(){
+
+        final CheckBox cbDoNotShowAgain;
+        final String PREFS_NAME = "INFO_VALIDITY_DATE";
+        AlertDialog.Builder dialogDoNotShow = new AlertDialog.Builder(this);
+        LayoutInflater adbInflater = LayoutInflater.from(this);
+        View doNotShowLayout = adbInflater.inflate(R.layout.checkbox, null);
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String skipMessage = settings.getString("skipMessage", "NOT checked");
+
+        cbDoNotShowAgain = doNotShowLayout.findViewById(R.id.skip);
+        dialogDoNotShow.setView(doNotShowLayout);
+        dialogDoNotShow.setTitle("Attention");
+        dialogDoNotShow.setMessage(Html.fromHtml("You can use this app for free until December 30,2018"));
+
+        dialogDoNotShow.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                String checkBoxResult = "NOT checked";
+
+                if (cbDoNotShowAgain.isChecked()) {
+                    checkBoxResult = "checked";
+                }
+
+                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences.Editor editor = settings.edit();
+
+                editor.putString("skipMessage", checkBoxResult);
+                editor.commit();
+
+                return;
+            }
+        });
+
+        if (!skipMessage.equals("checked")) {
+            dialogDoNotShow.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    if(!TrueTime.isInitialized()){
+                        new InitTrueTimeAsyncTask(HomeActivity.this).execute();
+                    }
+                }
+            });
+            dialogDoNotShow.show();
+        }else{
+            if(!TrueTime.isInitialized()){
+                new InitTrueTimeAsyncTask(HomeActivity.this).execute();
+            }
+        }
+
+        super.onResume();
     }
 }
