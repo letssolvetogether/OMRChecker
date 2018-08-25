@@ -37,7 +37,7 @@ public class OMRUnitTest {
     }
 
     @Test
-    public void testOMRScore(){
+    public void testOMRScoreSet1(){
         //OMRTestActivity is not added in manifest file
         OMRSheet omrSheet = new OMRSheet();
         omrSheet.setNumberOfQuestions(20);
@@ -46,7 +46,7 @@ public class OMRUnitTest {
 
         for(int i=1;i<=2;i++){
             System.out.println("i = "+i);
-            roiOfOMR = Imgcodecs.imread("testimages/omr_"+i+".jpg");
+            roiOfOMR = Imgcodecs.imread("testimages/set1/omr_"+i+".jpg");
             omrSheet.setMatOMRSheet(roiOfOMR);
             omrSheet.setWidth(roiOfOMR.cols());
             omrSheet.setHeight(roiOfOMR.rows());
@@ -59,14 +59,36 @@ public class OMRUnitTest {
     }
 
     @Test
-    public void testSingleOMRScore1(){
+    public void testOMRScoreSet2(){
         //OMRTestActivity is not added in manifest file
         OMRSheet omrSheet = new OMRSheet();
         omrSheet.setNumberOfQuestions(20);
         omrSheet.setOmrSheetBlock();
-        correctAnswers = new int[]{1,2,3,4,2,4,2,5,1,0,5,3,5,3,2,0,0,4,0,5};
+        correctAnswers = new int[]{1,2,3,2,4,5,4,3,2,1,5,4,3,2,1,2,3,4,5,4};
 
-        roiOfOMR = Imgcodecs.imread("testimages/omr_orig.jpg");
+        for(int i=1;i<=3;i++){
+            System.out.println("image = "+i);
+            roiOfOMR = Imgcodecs.imread("testimages/set2/omr_"+i+".jpg");
+            omrSheet.setMatOMRSheet(roiOfOMR);
+            omrSheet.setWidth(roiOfOMR.cols());
+            omrSheet.setHeight(roiOfOMR.rows());
+            omrSheet.setOmrSheetBlock();
+
+            studentAnswers = new DetectionUtil(omrSheet).getStudentAnswers(roiOfOMR);
+            int score = new EvaluationUtil(omrSheet).calculateScore(studentAnswers,correctAnswers);
+            assertEquals(score,19);
+        }
+    }
+
+    @Test
+    public void testSingleOMRScore(){
+        //OMRTestActivity is not added in manifest file
+        OMRSheet omrSheet = new OMRSheet();
+        omrSheet.setNumberOfQuestions(20);
+        omrSheet.setOmrSheetBlock();
+        correctAnswers = new int[]{1,2,3,4,2,4,2,5,1,0,5,3,5,3,2,4,0,4,0,5};
+
+        roiOfOMR = Imgcodecs.imread("testimages/omr_single.jpg");
         omrSheet.setMatOMRSheet(roiOfOMR);
         omrSheet.setWidth(roiOfOMR.cols());
         omrSheet.setHeight(roiOfOMR.rows());
@@ -75,24 +97,5 @@ public class OMRUnitTest {
         studentAnswers = new DetectionUtil(omrSheet).getStudentAnswers(roiOfOMR);
         int score = new EvaluationUtil(omrSheet).calculateScore(studentAnswers,correctAnswers);
         assertEquals(score,14);
-    }
-
-    @Test
-    public void testSingleOMRScore2(){
-        //OMRTestActivity is not added in manifest file
-        OMRSheet omrSheet = new OMRSheet();
-        omrSheet.setNumberOfQuestions(20);
-        omrSheet.setOmrSheetBlock();
-        correctAnswers = new int[]{1,2,3,2,4,5,4,3,2,1,5,4,3,2,1,2,3,4,5,4};
-
-        roiOfOMR = Imgcodecs.imread("testimages/omr_5.jpg");
-        omrSheet.setMatOMRSheet(roiOfOMR);
-        omrSheet.setWidth(roiOfOMR.cols());
-        omrSheet.setHeight(roiOfOMR.rows());
-        omrSheet.setOmrSheetBlock();
-
-        studentAnswers = new DetectionUtil(omrSheet).getStudentAnswers(roiOfOMR);
-        int score = new EvaluationUtil(omrSheet).calculateScore(studentAnswers,correctAnswers);
-        assertEquals(score,19);
     }
 }
