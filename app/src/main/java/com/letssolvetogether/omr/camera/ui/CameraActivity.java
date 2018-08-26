@@ -181,7 +181,7 @@ public class CameraActivity extends AppCompatActivity implements
         cbDoNotShowAgain = doNotShowLayout.findViewById(R.id.skip);
         dialogTips.setView(doNotShowLayout);
         dialogTips.setTitle("Tips:");
-        String tipsMsg = "Please make sure the light on OMR Sheet is proper (not too bright, not too low)<br><br>And there is no shadow.<br><br>";
+        String tipsMsg = "Put an OMR Sheet on flat surface.<br><br>Please make sure the light on an OMR Sheet is proper (not too bright, not too low)<br><br>And there is no shadow.<br><br><p style=\"text-align:center;\">Happy Scanning :)";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             dialogTips.setMessage(Html.fromHtml(tipsMsg, Html.FROM_HTML_MODE_LEGACY));
         } else {
