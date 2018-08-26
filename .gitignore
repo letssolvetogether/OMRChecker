@@ -17,3 +17,9 @@ openCVLibrary310/
 
 #truetime
 truetime/
+
+#testimages verification
+app/testimages/verification
+
+#release apk
+app/release/
