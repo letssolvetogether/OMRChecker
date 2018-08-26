@@ -42,7 +42,7 @@ public class InitTrueTimeAsyncTask extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
         if(!TrueTime.isInitialized()){
             final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            String validityMsg = "In order to check free validity period of this App, we require you to <b>turn on internet</b> once and then try again.<br><br>Because you are too smart and make me fool .. ";
+            String validityMsg = "In order to check free validity period of this App, we require you to <b>turn on internet</b> once and then try again.<br><br>Because you are too smart and make me fool .. ;) ";
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 builder.setMessage(Html.fromHtml(validityMsg, Html.FROM_HTML_MODE_LEGACY));
             } else {
