@@ -14,7 +14,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -35,29 +36,21 @@ android {
 }
 
 dependencies {
-
     // Room
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
-
     implementation "android.arch.lifecycle:viewmodel:$lifecycleVersion"
     implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
-
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
     implementation "com.android.support:support-v4:$supportLibraryVersion"
     implementation "com.android.support:design:$supportLibraryVersion"
     implementation "com.android.support:support-vector-drawable:$supportLibraryVersion"
-
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-
     testImplementation 'junit:junit:4.12'
-    testImplementation "org.robolectric:robolectric:3.8"
-
+    testImplementation 'org.robolectric:robolectric:3.8'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
     implementation project(':openCVLibrary310')
     implementation project(':cameralibrary')
     implementation project(':truetime')
