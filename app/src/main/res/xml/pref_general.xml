@@ -12,6 +12,13 @@
         android:dialogTitle="@string/dialog_title_preference_opensourcelibraries"
         android:key="@string/key_preference_opensourcelibraries"/>
     <Preference
+        android:title="@string/title_preference_privacy_policy"
+        android:key="@string/key_preference_privacy_policy">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="@string/url_privacy_policy" />
+    </Preference>
+    <Preference
         android:title="@string/title_preference_contactus"
         android:key="@string/key_preference_contactus">
         <intent
