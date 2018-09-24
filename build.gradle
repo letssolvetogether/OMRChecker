@@ -35,4 +35,5 @@ ext {
     roomVersion = "1.1.1"
     lifecycleVersion = "1.1.1"
     VERSION_NAME = "1.0.0"
+    ABI_CODES = ['arm64-v8a': 1, "armeabi": 2, "armeabi-v7a": 3, "mips": 4, "mips64": 5, "x86": 6, "x86_64": 7]
 }
