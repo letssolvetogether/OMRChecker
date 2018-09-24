@@ -217,28 +217,10 @@ public class DetectionUtil {
         int thresholdValue;
 
         thresholdValue = (int)median/2;
-        if(median <= 130)
-            thresholdValue += 5;
-        else if(median <= 140)
-            thresholdValue += 10;
-        else if(median <= 150)
-            thresholdValue += 15;
-        else if(median <= 160)
-            thresholdValue += 20;
-        else if(median <= 170)
-            thresholdValue += 25;
-        else if(median <= 180)
-            thresholdValue += 30;
-        else if(median <= 190)
-            thresholdValue += 35;
-        else if(median <= 200)
-            thresholdValue += 40;
-        else if(median <= 210)
-            thresholdValue += 45;
-        else if(median <= 220)
-            thresholdValue += 50;
-        else if(median <= 230)
-            thresholdValue += 55;
+
+        if(median >= 130)
+            thresholdValue += (median/10 - 12) * 5;
+
 
         System.out.println("Median: "+median);
 
