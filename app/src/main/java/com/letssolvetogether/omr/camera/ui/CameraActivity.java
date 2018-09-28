@@ -302,8 +302,8 @@ public class CameraActivity extends AppCompatActivity implements
                     throw new RuntimeException("Error on requesting camera permission.");
                 }
                 if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, R.string.camera_permission_not_granted,
-                            Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, R.string.camera_permission_not_granted,
+//                            Toast.LENGTH_SHORT).show();
                 }
                 // No need to start camera here; it is handled by onResume
                 break;
