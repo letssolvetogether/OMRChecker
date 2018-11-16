@@ -129,6 +129,10 @@ public class OMRSheet extends ViewModel {
 
     public int getWidthOfBoundingSquareForCircle() {
         widthOfBoundingSquareForCircle = (int)(getWidth()/17.0);
+        //The width should be even otherwise we will get width difference of 1 in getTotalPixelsInBoundingSquare()
+        // as we divide the width in getRectangleCoordinates()
+        if(widthOfBoundingSquareForCircle % 2 != 0)
+            widthOfBoundingSquareForCircle++;
         return widthOfBoundingSquareForCircle;
     }
 
