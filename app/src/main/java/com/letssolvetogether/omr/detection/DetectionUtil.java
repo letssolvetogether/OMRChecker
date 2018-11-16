@@ -257,16 +257,16 @@ public class DetectionUtil {
         }
 
         //just for testing purpose
-        storeImage1(matOMR,"omr_rgb");
-        storeImage1(matGray,"omr_gray");
-        storeImage1(matThresholded,"omr_threshold");
-//        storeImage(matOMR,"omr_orig");
-//        storeImage(matGray,"omr_gray");
-//        storeImage(matThresholded,"omr_thrshold");
+//        storeImageForJUnitTest(matOMR,"omr_rgb");
+//        storeImageForJUnitTest(matGray,"omr_gray");
+//        storeImageForJUnitTest(matThresholded,"omr_threshold");
+//        storeImageOnDevice(matOMR,"omr_orig");
+//        storeImageOnDevice(matGray,"omr_gray");
+//        storeImageOnDevice(matThresholded,"omr_thrshold");
         return studentAnswers;
     }
 
-    public void storeImage(Mat mat, String imageName){
+    public void storeImageOnDevice(Mat mat, String imageName){
         FileOutputStream out = null;
         File imageFile = new File(Environment.getExternalStorageDirectory(), imageName+".jpg");
 
@@ -290,7 +290,7 @@ public class DetectionUtil {
         }
     }
 
-    public void storeImage1(Mat mat, String imageName){
+    public void storeImageForJUnitTest(Mat mat, String imageName){
         Imgcodecs.imwrite("testimages\\verification\\"+imageName+".jpg", mat);
     }
 }
