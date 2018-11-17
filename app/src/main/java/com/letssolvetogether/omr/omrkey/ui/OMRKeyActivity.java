@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.ScrollView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,45 +65,39 @@ public class OMRKeyActivity extends AppCompatActivity implements RadioButton.OnC
 
     public void createAnswerKey(){
 
-        ScrollView scrollView = findViewById(R.id.scrollView);
         TextView textView;
-
-        LinearLayout horzLinearLayout, vertLinearLayout;
         CheckBox checkBox;
 
-        vertLinearLayout = new LinearLayout(this);
-        vertLinearLayout.setOrientation(LinearLayout.VERTICAL);
+        TableLayout tableLayout = findViewById(R.id.tableLayout);
+        TableRow tableRow;
 
         for(int i=0;i<20;i++){
 
             textView = new TextView(this);
+            tableRow = new TableRow(this);
+
             if(i<9)
                 textView.setText("\t"+String.valueOf(i+1)+")\t\t");
             else
                 textView.setText(String.valueOf(i+1)+")\t\t");
 
             textView.setTextSize(20);
+            textView.setPadding(5,0,0,0);
 
-            horzLinearLayout = new LinearLayout(this);
-            horzLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-            horzLinearLayout.addView(textView);
-            //horzLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+            tableRow.addView(textView);
 
             for(int j=0; j<5; j++){
 
                 checkBox = new CheckBox(this);
                 checkBox.setId((i*5)+j);
                 checkBox.setButtonDrawable(circleIds[j]);
-                checkBox.setScaleX(0.85f);
-                checkBox.setScaleY(0.85f);
-                checkBox.setPadding(10,30,0,30);
+                checkBox.setPadding(5,30,5,30);
                 checkBox.setOnCheckedChangeListener(this);
 
-                horzLinearLayout.addView(checkBox);
+                tableRow.addView(checkBox);
             }
-            vertLinearLayout.addView(horzLinearLayout);
+            tableLayout.addView(tableRow);
         }
-        scrollView.addView(vertLinearLayout);
     }
 
     public void loadCorrectAnswers(){
