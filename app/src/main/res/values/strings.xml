@@ -13,6 +13,10 @@
     <string name="title_scan_omr">Scan OMR</string>
     <string name="title_more">More</string>
 
+    <!-- OMR Key -->
+    <string name="title_answer_key">Answer Key</string>
+    <string name="save_answer_key">(Press back to save answer key)</string>
+
     <!-- Preference -->
 
     <string name="title_preference_answersheets">Answer Sheets</string>
