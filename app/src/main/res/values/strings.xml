@@ -19,6 +19,9 @@
 
     <!-- Preference -->
 
+    <string name="title_preference_tutorial">Tutorial</string>
+    <string name="key_preference_tutorial">tutorial</string>
+
     <string name="title_preference_answersheets">Answer Sheets</string>
     <string name="key_preference_answersheets">answersheets</string>
 
@@ -40,5 +43,21 @@
     <string name="url_privacy_policy">http://letssolvetogether.in/privacy.html</string>
     <string name="url_fb_letssolvetogether">https://fb.com/letssolvetogether.in</string>
     <string name="url_letssolvetogether">http://letssolvetogether.in</string>
+
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">Download and Print Answersheet</string>
+    <string name="slide_1_desc">OR \n\n http://letssolvetogether.in/answersheets/letssolvetogether_20_questions.pdf</string>
+
+    <string name="slide_2_title">Set Answer Key</string>
+    <string name="slide_2_desc"></string>
+
+    <string name="slide_3_title">Scan OMR Sheet</string>
+    <string name="slide_3_desc"></string>
+
+    <string name="slide_4_title">Get Score</string>
+    <string name="slide_4_desc"></string>
 
 </resources>

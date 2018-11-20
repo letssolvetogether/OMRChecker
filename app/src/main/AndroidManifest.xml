@@ -11,22 +11,29 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.letssolvetogether.omr.home.ui.HomeActivity"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         <activity android:name="com.letssolvetogether.omr.omrkey.ui.OMRKeyActivity" />
         <activity
             android:name="com.letssolvetogether.omr.camera.ui.CameraActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/FullscreenTheme">
-        </activity>
+            android:theme="@style/FullscreenTheme" />
         <activity
             android:name="com.letssolvetogether.omr.settings.SettingsActivity"
             android:label="@string/title_activity_settings" />
+        <activity android:name="com.letssolvetogether.omr.tutorial.TutorialActivity">
+            <intent-filter>
+                <action android:name="com.letssolvetogether.omr.tutorial.TutorialActivity"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.letssolvetogether.omr.firstrun.FirstRunActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

@@ -5,4 +5,11 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="black_overlay">#66000000</color>
+
+    <!-- dot's active color -->
+    <color name="dot_dark">#d1395c</color>
+
+    <!-- dot's inactive color -->
+    <color name="dot_light">#f98da5</color>
+
 </resources>
