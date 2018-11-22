@@ -23,7 +23,6 @@ import static org.junit.Assert.assertEquals;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
 public class OMRUnitTest {
     Mat roiOfOMR;
     OMRTestActivity omrTestActivity;
