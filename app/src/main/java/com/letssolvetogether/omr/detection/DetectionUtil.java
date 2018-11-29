@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.letssolvetogether.omr.OMRSheetConstants;
+import com.letssolvetogether.omr.exceptions.UnsupportedCameraResolutionException;
 import com.letssolvetogether.omr.object.Circle;
 import com.letssolvetogether.omr.object.OMRSheet;
 import com.letssolvetogether.omr.object.OMRSheetCorners;
@@ -27,6 +28,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DetectionUtil {
@@ -41,6 +43,15 @@ public class DetectionUtil {
 
     private OMRSheetCorners omrSheetCorners;
     private OMRSheet omrSheet;
+
+    private int thresholdOfNoOfBlackPixels;
+    private int widthGaussian = 5, heightGaussian = 5;
+    private int widthKSize, heightKSize;
+
+    private int gaussianBlur[] = {5, 5, 7, 7, 15, 15};
+    private int structuringElement[] = {8, 8, 12, 16, 26, 26};
+    private int noOfBlackPixels[] = {50, 50, 50, 100, 100, 150};
+    private int resolutionWidth[] = {720, 960, 1080, 1920, 2448, 3120};
 
     public DetectionUtil(OMRSheet omrSheet) {
         omrSheetCorners = new OMRSheetCorners();
@@ -58,7 +69,7 @@ public class DetectionUtil {
 
         Mat matGaussianBlur = new Mat();
 
-        Imgproc.GaussianBlur(matOMR, matGaussianBlur, new org.opencv.core.Size(5, 5), 3, 2.5);
+        Imgproc.GaussianBlur(matOMR, matGaussianBlur, new org.opencv.core.Size(widthGaussian, heightGaussian), 3, 2.5);
 
         //convert to gray
         Mat matGray = new Mat();
@@ -199,16 +210,25 @@ public class DetectionUtil {
         return pt;
     }
 
-    public byte[][] getStudentAnswers(Mat matOMR){
+    public byte[][] getStudentAnswers(Mat matOMR) throws UnsupportedCameraResolutionException{
+
+        int index = Arrays.binarySearch(resolutionWidth,matOMR.cols());
+        if(index == -1) {
+            throw new UnsupportedCameraResolutionException();
+        }
+
+        thresholdOfNoOfBlackPixels = noOfBlackPixels[index];
+        widthKSize = heightKSize = structuringElement[index];
+        widthGaussian = heightGaussian = gaussianBlur[index];
 
         Mat matGaussianBlur = new Mat();
-        Imgproc.GaussianBlur(matOMR, matGaussianBlur, new Size(5,5), 3, 2.5);
+        Imgproc.GaussianBlur(matOMR, matGaussianBlur, new Size(widthGaussian, heightGaussian), 3, 2.5);
 
         //convert to gray
         Mat matGray = new Mat();
         Imgproc.cvtColor(matGaussianBlur, matGray, Imgproc.COLOR_RGB2GRAY);
 
-        Mat kernel = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_ELLIPSE, new Size(8,8));
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_ELLIPSE, new Size(widthKSize, heightKSize));
         Imgproc.morphologyEx(matGray, matGray, Imgproc.MORPH_CLOSE,kernel);
 
         double median = new PrereqChecks().brightness(matGray);
@@ -246,7 +266,7 @@ public class DetectionUtil {
                             //FULL
                             studentAnswers[i + (questionsPerBlock * k)][j] = OMRSheetConstants.CIRCLE_FILLED_FULL;
                             System.out.println("noOfBlackPixels - " + "i= " + (i +1) + " j= " + (j+1) + " " + noOfBlackPixels);
-                        }else if(noOfBlackPixels >= 50){
+                        }else if(noOfBlackPixels >= thresholdOfNoOfBlackPixels){
                             //SEMI
                             studentAnswers[i + (questionsPerBlock * k)][j] = OMRSheetConstants.CIRCLE_FILLED_SEMI;
                             System.out.println("noOfBlackPixels - " + "i= " + (i +1) + " j= " + (j+1) + " " + noOfBlackPixels);

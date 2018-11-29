@@ -14,6 +14,7 @@ import com.google.android.cameraview.CameraView;
 import com.letssolvetogether.omr.detection.DetectionUtil;
 import com.letssolvetogether.omr.drawing.DrawingUtil;
 import com.letssolvetogether.omr.evaluation.EvaluationUtil;
+import com.letssolvetogether.omr.exceptions.UnsupportedCameraResolutionException;
 import com.letssolvetogether.omr.object.OMRSheet;
 import com.letssolvetogether.omr.object.OMRSheetCorners;
 import com.letssolvetogether.omr.utils.PrereqChecks;
@@ -25,18 +26,18 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     private static String TAG="ProcessOMRSheetAsyncTask";
 
-    OMRSheet omrSheet;
-    OMRSheetCorners omrSheetCorners;
-    Bitmap bmpOMRSheet;
-    Mat matOMR;
-    CameraView mCameraView;
+    private OMRSheet omrSheet;
+    private OMRSheetCorners omrSheetCorners;
+    private Bitmap bmpOMRSheet;
+    private Mat matOMR;
+    private CameraView mCameraView;
     //CustomView customView;
-    LinearLayout linearLayout;
-    ImageView iv;
-    DetectionUtil detectionUtil;
-    PrereqChecks prereqChecks;
-    byte[][] studentAnswers;
-    int score;
+    private LinearLayout linearLayout;
+    private ImageView iv;
+    private DetectionUtil detectionUtil;
+    private PrereqChecks prereqChecks;
+    private byte[][] studentAnswers;
+    private int score;
 
     public ProcessOMRSheetAsyncTask(CameraView mCameraView, OMRSheet omrSheet) {
         this.omrSheet = omrSheet;
@@ -88,7 +89,21 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
             Utils.matToBitmap(roiOfOMR, bmp);
             omrSheet.setBmpOMRSheet(bmp);
 
-            studentAnswers = new DetectionUtil(omrSheet).getStudentAnswers(roiOfOMR);
+            try {
+                studentAnswers = detectionUtil.getStudentAnswers(roiOfOMR);
+            } catch (UnsupportedCameraResolutionException e) {
+                AlertDialog.Builder dialogUnsupporteCameraResolution = new AlertDialog.Builder(mCameraView.getContext());
+
+                dialogUnsupporteCameraResolution.setMessage("The Camera resolution "+roiOfOMR.rows()+"x"+matOMR.cols()+" is not supported by OMR Checker.\nPlease take screenshot and send a mail to shreyaspatel29@gmail.com");
+                dialogUnsupporteCameraResolution.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                dialogUnsupporteCameraResolution.show();
+                return;
+            }
 
             score = new EvaluationUtil(omrSheet).calculateScore(studentAnswers, omrSheet.getCorrectAnswers());
 
