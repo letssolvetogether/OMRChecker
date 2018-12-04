@@ -213,7 +213,7 @@ public class DetectionUtil {
     public byte[][] getStudentAnswers(Mat matOMR) throws UnsupportedCameraResolutionException{
 
         int index = Arrays.binarySearch(resolutionWidth,matOMR.cols());
-        if(index == -1) {
+        if(index < 0) {
             throw new UnsupportedCameraResolutionException();
         }
 
