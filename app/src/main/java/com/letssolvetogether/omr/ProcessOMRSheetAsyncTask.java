@@ -83,6 +83,9 @@ public class ProcessOMRSheetAsyncTask extends AsyncTask<Void, Void, Boolean> {
             omrSheet.setOmrSheetCorners(omrSheetCorners);
 
             Mat roiOfOMR = detectionUtil.findROIofOMR(omrSheet);
+            if(matOMR == null){
+                mCameraView.requestPreviewFrame();
+            }
             omrSheet.setMatOMRSheet(roiOfOMR);
 
             Bitmap bmp = Bitmap.createBitmap(roiOfOMR.cols(), roiOfOMR.rows(), Bitmap.Config.ARGB_8888);
