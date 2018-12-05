@@ -44,7 +44,7 @@ public class OMRUnitTest {
         int[][] correctAnswers = new int[][]{{1,0,3,0,2,4,0,0,0,0,5,3,0,0,0,0,0,0,0,5},
                                             {1,2,3,2,4,5,4,3,2,1,5,4,3,2,1,2,3,4,5,4}};
 
-        String resolution[] = {"720p","960p","1080p","1920p","2448p","3120p"};
+        String resolution[] = {"720p","960p","1080p","1536p","1920p","2448p","3120p"};
         int correctAnswerForSet[] = {7,19};
 
         int i,j,k;

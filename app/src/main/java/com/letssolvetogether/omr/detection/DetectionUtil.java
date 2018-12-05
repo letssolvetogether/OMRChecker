@@ -48,10 +48,10 @@ public class DetectionUtil {
     private int widthGaussian = 5, heightGaussian = 5;
     private int widthKSize, heightKSize;
 
-    private int gaussianBlur[] = {5, 5, 7, 7, 15, 15};
-    private int structuringElement[] = {8, 8, 12, 16, 26, 26};
-    private int noOfBlackPixels[] = {50, 50, 50, 100, 100, 150};
-    private int resolutionWidth[] = {720, 960, 1080, 1920, 2448, 3120};
+    private int gaussianBlur[] = {5, 5, 7, 7, 7, 15, 15};
+    private int structuringElement[] = {8, 8, 12, 16, 16, 26, 26};
+    private int noOfBlackPixels[] = {50, 50, 50, 75, 100, 100, 150};
+    private int resolutionWidth[] = {720, 960, 1080, 1536, 1920, 2448, 3120};
 
     public DetectionUtil(OMRSheet omrSheet) {
         omrSheetCorners = new OMRSheetCorners();
