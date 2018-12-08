@@ -68,7 +68,7 @@ public class InitTrueTimeAsyncTask extends AsyncTask<Void, Void, Void> {
             Log.i(TAG,"TrueTime Intialized - " + date);
 
             //Caution: if lastFreeDate and trueTimeDate is same, it will exit.
-            Date lastFreeDate = new Date(118,11,31);  //Dec 30, 2018
+            Date lastFreeDate = new Date(119,2,31);  //March 30, 2019
             boolean validPeriodExpired = trueTimeDate.before(lastFreeDate);
 
             if(!validPeriodExpired){
