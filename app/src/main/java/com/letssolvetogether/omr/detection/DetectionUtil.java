@@ -85,8 +85,8 @@ public class DetectionUtil {
         int minRadiusCornerCircle;
         int maxRadiusCornerCircle;
 
-        minRadiusCornerCircle = matOMR.cols() / 48;
-        maxRadiusCornerCircle = matOMR.cols() / 32;
+        minRadiusCornerCircle = matOMR.cols() / 52;
+        maxRadiusCornerCircle = matOMR.cols() / 30;
 
         Imgproc.HoughCircles(matGray, matCircles, Imgproc.CV_HOUGH_GRADIENT, 0.9, matOMR.cols()/2, 15, 30, minRadiusCornerCircle, maxRadiusCornerCircle);
 
