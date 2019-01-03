@@ -84,5 +84,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(':openCVLibrary310')
     implementation (name:"cameralibrary-release-$CAMERA_LIB_VERSION", ext:"aar")
-    implementation project(':truetime')
+    implementation (name:"truetime-release-$TRUETIME_LIB_VERSION", ext:"aar")
 }
