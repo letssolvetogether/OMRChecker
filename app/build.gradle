@@ -20,7 +20,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets { main { jni.srcDirs = [] } }
+
     splits {
         abi {
             enable true
@@ -82,7 +82,7 @@ dependencies {
     testImplementation "org.robolectric:robolectric:$robolectricVersion"
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation project(':openCVLibrary310')
+    implementation (name:"OpenCV-Android-$OPENCV_LIB_VERSION", ext:"aar")   //https://github.com/steveliles/opencv-android
     implementation (name:"cameralibrary-release-$CAMERA_LIB_VERSION", ext:"aar")
     implementation (name:"truetime-release-$TRUETIME_LIB_VERSION", ext:"aar")
 }
