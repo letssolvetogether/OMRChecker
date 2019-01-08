@@ -110,6 +110,10 @@ public class DetectionUtil {
         }
 
         getCircleCentersInOrder(circle, omrSheetCorners, matOMR.cols(), matOMR.rows());
+
+        if(omrSheetCorners.getTopLeftCorner() == null || omrSheetCorners.getTopRightCorner() == null || omrSheetCorners.getBottomLeftCorner() == null || omrSheetCorners.getBottomRightCorner() == null)
+            omrSheetCorners = null;
+
         return omrSheetCorners;
     }
 
