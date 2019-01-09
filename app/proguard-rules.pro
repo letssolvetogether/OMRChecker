@@ -22,3 +22,6 @@
 
 #If you don't keep this classes, APK fails to launch with NullPointerException
 -keep class android.support.v7.widget.** { *; }
+
+#keep opencv library classes
+-keep class org.opencv.** {*;}
