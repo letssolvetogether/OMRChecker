@@ -38,7 +38,7 @@ ext {
     roomVersion = "1.1.1"
     lifecycleVersion = "1.1.1"
     robolectricVersion = "4.0.2"
-    VERSION_NAME = "1.1.3"
+    VERSION_NAME = "1.1.4"
     CAMERA_LIB_VERSION = "1.0.0"
     TRUETIME_LIB_VERSION = "1.0.0"
     OPENCV_LIB_VERSION = "3.1.0"
