@@ -19,3 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 -renamesourcefileattribute SourceFile
+
+#If you don't keep this classes, APK fails to launch with NullPointerException
+-keep class android.support.v7.widget.** { *; }
