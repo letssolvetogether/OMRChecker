@@ -9,7 +9,7 @@ public class AnswersUtils {
         if(strAnswers!=null && !strAnswers.isEmpty()){
             String[] splittedCorrectAnswers = strAnswers.split(",");
 
-            intAnswers = new int[20];
+            intAnswers = new int[splittedCorrectAnswers.length];
             for(int i=0; i<splittedCorrectAnswers.length; i++)
                 intAnswers[i] = Integer.parseInt(splittedCorrectAnswers[i]);
         }

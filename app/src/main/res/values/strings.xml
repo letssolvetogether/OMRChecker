@@ -12,6 +12,11 @@
     <string name="title_home">Home</string>
     <string name="title_scan_omr">Scan OMR</string>
     <string name="title_more">More</string>
+    <string name="no_of_questions">No. of Questions</string>
+
+    <!-- OMR Sheet Types -->
+    <string name="twenty">20</string>
+    <string name="hundred">100</string>
 
     <!-- OMR Key -->
     <string name="title_answer_key">Answer Key</string>

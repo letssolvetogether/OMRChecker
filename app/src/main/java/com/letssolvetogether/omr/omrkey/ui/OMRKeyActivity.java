@@ -23,13 +23,16 @@ public class OMRKeyActivity extends AppCompatActivity implements RadioButton.OnC
 
     private int[] correctAnswers;
 
+    private int noOfQuestions;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_omrkey);
 
-        createAnswerKey();
-        loadCorrectAnswers();
+        noOfQuestions = getIntent().getIntExtra("noOfQuestions", 20);
+        createAnswerKey(noOfQuestions);
+        loadCorrectAnswers(noOfQuestions);
     }
 
     @Override
@@ -60,10 +63,10 @@ public class OMRKeyActivity extends AppCompatActivity implements RadioButton.OnC
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        storeCorrectAnswers();
+        storeCorrectAnswers(noOfQuestions);
     }
 
-    public void createAnswerKey(){
+    public void createAnswerKey(int noOfQuestions){
 
         TextView textView;
         CheckBox checkBox;
@@ -71,7 +74,7 @@ public class OMRKeyActivity extends AppCompatActivity implements RadioButton.OnC
         TableLayout tableLayout = findViewById(R.id.tableLayout);
         TableRow tableRow;
 
-        for(int i=0;i<20;i++){
+        for(int i=0; i < noOfQuestions; i++){
 
             textView = new TextView(this);
             tableRow = new TableRow(this);
@@ -100,20 +103,20 @@ public class OMRKeyActivity extends AppCompatActivity implements RadioButton.OnC
         }
     }
 
-    public void loadCorrectAnswers(){
+    public void loadCorrectAnswers(final int noOfQuestions){
 
         final String[] strCorrectAnswers = {""};
         final AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "omr").build();
         final OMRKey omrKey = new OMRKey();
-        omrKey.setOmrkeyid(1);
+        omrKey.setOmrkeyid(noOfQuestions);
         omrKey.setStrCorrectAnswers(strCorrectAnswers[0]);
 
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                if(db.omrKeyDao().findById(1) != null)
-                    strCorrectAnswers[0] = db.omrKeyDao().findById(1).getStrCorrectAnswers();
+                if(db.omrKeyDao().findById(noOfQuestions) != null)
+                    strCorrectAnswers[0] = db.omrKeyDao().findById(noOfQuestions).getStrCorrectAnswers();
                 return null;
             }
 
@@ -140,11 +143,11 @@ public class OMRKeyActivity extends AppCompatActivity implements RadioButton.OnC
         }.execute();
     }
 
-    public void storeCorrectAnswers(){
-        correctAnswers = new int[20];
+    public void storeCorrectAnswers(int noOfQuestions){
+        correctAnswers = new int[noOfQuestions];
         int cnt = -1;
         CheckBox checkBox;
-        for(int i=0; i<100; i++){
+        for(int i=0; i < noOfQuestions * 5; i++){
             checkBox = findViewById(i);
 
             if(i%5 == 0)
@@ -161,7 +164,7 @@ public class OMRKeyActivity extends AppCompatActivity implements RadioButton.OnC
             final AppDatabase db = Room.databaseBuilder(getApplicationContext(),
                     AppDatabase.class, "omr").build();
             final OMRKey omrKey = new OMRKey();
-            omrKey.setOmrkeyid(1);
+            omrKey.setOmrkeyid(noOfQuestions);
             omrKey.setStrCorrectAnswers(strCorrectAnswers);
 
             new AsyncTask<Void, Void, Void>() {

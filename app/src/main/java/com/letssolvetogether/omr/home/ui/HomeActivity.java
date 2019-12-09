@@ -2,18 +2,15 @@ package com.letssolvetogether.omr.home.ui;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
+import android.widget.RadioGroup;
 
 import com.instacart.library.truetime.TrueTime;
 import com.letssolvetogether.omr.main.R;
@@ -23,6 +20,8 @@ import com.letssolvetogether.omr.settings.SettingsActivity;
 import com.letssolvetogether.omr.camera.ui.CameraActivity;
 
 public class HomeActivity extends AppCompatActivity{
+
+    private int noOfQuestions = 20;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -34,6 +33,7 @@ public class HomeActivity extends AppCompatActivity{
                     return true;
                 case R.id.scan_omr:
                     Intent cameraIntent = new Intent(HomeActivity.this, CameraActivity.class);
+                    cameraIntent.putExtra("noOfQuestions", noOfQuestions);
                     startActivity(cameraIntent);
                     return true;
                 case R.id.navigation_more:
@@ -47,10 +47,27 @@ public class HomeActivity extends AppCompatActivity{
         }
     };
 
+    private RadioGroup.OnCheckedChangeListener radioGroupOnCheckedChangeListener = new RadioGroup.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(RadioGroup group, int checkedId) {
+            switch (checkedId){
+                case R.id.radio_omrkey_20:
+                    noOfQuestions = 20;
+                    break;
+                case R.id.radio_omrkey_100:
+                    noOfQuestions = 100;
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        RadioGroup radioGroupOMRTypes = findViewById(R.id.radiogroup_omrtypes);
+        radioGroupOMRTypes.setOnCheckedChangeListener(radioGroupOnCheckedChangeListener);
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -60,6 +77,7 @@ public class HomeActivity extends AppCompatActivity{
 
     public void displayAnswerKey(View view){
         Intent omrKeyActivity = new Intent(this, OMRKeyActivity.class);
+        omrKeyActivity.putExtra("noOfQuestions", noOfQuestions);
         startActivity(omrKeyActivity);
     }
 
