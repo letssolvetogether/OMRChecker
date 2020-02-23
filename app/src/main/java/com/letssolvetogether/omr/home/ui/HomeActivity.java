@@ -33,8 +33,27 @@ public class HomeActivity extends AppCompatActivity{
                     return true;
                 case R.id.scan_omr:
                     Intent cameraIntent = new Intent(HomeActivity.this, CameraActivity.class);
-                    cameraIntent.putExtra("noOfQuestions", noOfQuestions);
-                    startActivity(cameraIntent);
+
+                    if(noOfQuestions == 20) {
+                        cameraIntent.putExtra("noOfQuestions", noOfQuestions);
+                        startActivity(cameraIntent);
+                    }else {
+                        new AlertDialog.Builder(HomeActivity.this)
+                            .setMessage("Coming soon .. ")
+                            .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                  @Override
+                                  public void onDismiss(DialogInterface dialog) {
+                                      dialog.dismiss();
+                                  }
+                              })
+                            .show();
+                    }
                     return true;
                 case R.id.navigation_more:
                     Intent settingsIntent = new Intent(HomeActivity.this, SettingsActivity.class);
