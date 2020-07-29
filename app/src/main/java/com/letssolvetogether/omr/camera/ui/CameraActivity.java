@@ -83,6 +83,8 @@ public class CameraActivity extends AppCompatActivity implements
     private static String BLUR_IMAGE = "Blur Image";
     private static String LOW_BRIGHTNESS = "Low Brightness";
 
+    private int noOfQuestions;
+
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -147,6 +149,8 @@ public class CameraActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_camera);
+
+        noOfQuestions = getIntent().getExtras().getInt("noOfQuestions");
 
         loadCorrectAnswers();
 
@@ -222,16 +226,16 @@ public class CameraActivity extends AppCompatActivity implements
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                if (db.omrKeyDao().findById(1) != null) {
+                    if (db.omrKeyDao().findById(noOfQuestions) != null) {
 
-                    OMRKey omrKey = db.omrKeyDao().findById(1);
+                    OMRKey omrKey = db.omrKeyDao().findById(noOfQuestions);
                     strCorrectAnswers[0] = omrKey.getStrCorrectAnswers();
 
                     if (strCorrectAnswers[0] != null && !strCorrectAnswers[0].isEmpty()) {
 
                         int[] answers = AnswersUtils.strtointAnswers(strCorrectAnswers[0]);
 
-                        omrSheet.setNumberOfQuestions(20);
+                        omrSheet.setNumberOfQuestions(noOfQuestions);
                         omrSheet.setCorrectAnswers(answers);
                     }else{
                         Toast.makeText(getApplicationContext(),"No answers",Toast.LENGTH_LONG).show();
