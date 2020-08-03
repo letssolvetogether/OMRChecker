@@ -1,14 +1,16 @@
 apply plugin: 'com.android.application'
 
-import com.android.build.OutputFile
-
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.letssolvetogether.omr.main"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        //versionCode buildVersionCode()
+
+        def (major, minor, patch) = VERSION_NAME.toLowerCase().tokenize('.')
+        (major, minor, patch) = [major, minor, patch].collect{it.toInteger()}
+        versionCode = (major * 10000) + (minor * 100) + patch
+
         versionName VERSION_NAME
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -30,35 +32,6 @@ android {
         }
     }
 
-    android.applicationVariants.all { variant ->
-
-        // Assigns a different version code for each output APK
-        // other than the universal APK.
-        variant.outputs.each { output ->
-
-            // Stores the value of ext.abiCodes that is associated with the ABI for this variant.
-            def baseAbiVersionCode =
-                    // Determines the ABI for this variant and returns the mapped value.
-                    ABI_CODES.get(output.getFilter(OutputFile.ABI))
-
-            // Because abiCodes.get() returns null for ABIs that are not mapped by ext.abiCodes,
-            // the following code does not override the version code for universal APKs.
-            // However, because we want universal APKs to have the lowest version code,
-            // this outcome is desirable.
-            if (baseAbiVersionCode == null) {
-                //for universal APK
-                baseAbiVersionCode = 8
-            }
-
-            // Assigns the new version code to versionCodeOverride, which changes the version code
-            // for only the output APK, not for the variant itself. Skipping this step simply
-            // causes Gradle to use the value of variant.versionCode for the APK.
-
-            def (major, minor, patch) = VERSION_NAME.toLowerCase().tokenize('.')
-            (major, minor, patch) = [major, minor, patch].collect{it.toInteger()}
-            output.versionCodeOverride = (major * 10000) + (minor * 100) + patch
-        }
-    }
     testOptions {
         unitTests {
             includeAndroidResources = true
