@@ -12,7 +12,7 @@ android {
         versionCode = (major * 10000) + (minor * 100) + patch
 
         versionName VERSION_NAME
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -40,21 +40,17 @@ android {
 }
 
 dependencies {
-    // Room
-    implementation "android.arch.persistence.room:runtime:$roomVersion"
-    annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
-    implementation "android.arch.lifecycle:viewmodel:$lifecycleVersion"
-    implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
-    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
-    implementation "com.android.support:support-v4:$supportLibraryVersion"
-    implementation "com.android.support:design:$supportLibraryVersion"
-    implementation "com.android.support:support-vector-drawable:$supportLibraryVersion"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    annotationProcessor "androidx.room:room-compiler:$roomVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    implementation "androidx.appcompat:appcompat:$appcompat"
+    implementation "androidx.legacy:legacy-support-v4:$legacySupport"
+    implementation "com.google.android.material:material:$materialVersion"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    testImplementation 'junit:junit:4.12'
+    implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
+    testImplementation "junit:junit:$junitVersion"
     testImplementation "org.robolectric:robolectric:$robolectricVersion"
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation (name:"OpenCV-Android-$OPENCV_LIB_VERSION", ext:"aar")   //https://github.com/steveliles/opencv-android
     implementation (name:"cameralibrary-release-$CAMERA_LIB_VERSION", ext:"aar")
     implementation (name:"truetime-release-$TRUETIME_LIB_VERSION", ext:"aar")
