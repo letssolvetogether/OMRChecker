@@ -1,4 +1,7 @@
 # OMR Checker
+
+[![Join the chat at https://gitter.im/letssolvetogether/OMRChecker](https://badges.gitter.im/letssolvetogether/OMRChecker.svg)](https://gitter.im/letssolvetogether/OMRChecker?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 OMR Checker is an Android app that allows user to scan OMR Sheets using smartphone.
 
 [<img height="35%" width="35%" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"/>](https://play.google.com/store/apps/details?id=com.letssolvetogether.omr.main)
