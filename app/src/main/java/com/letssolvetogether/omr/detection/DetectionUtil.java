@@ -1,7 +1,5 @@
 package com.letssolvetogether.omr.detection;
 
-import android.graphics.Bitmap;
-import android.os.Environment;
 import android.util.Log;
 
 import com.letssolvetogether.omr.OMRSheetConstants;
@@ -11,8 +9,8 @@ import com.letssolvetogether.omr.object.OMRSheet;
 import com.letssolvetogether.omr.object.OMRSheetCorners;
 import com.letssolvetogether.omr.utils.OMRSheetUtil;
 import com.letssolvetogether.omr.utils.PrereqChecks;
+import com.letssolvetogether.omr.utils.StorageUtils;
 
-import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -20,13 +18,9 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.utils.Converters;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -281,40 +275,12 @@ public class DetectionUtil {
         }
 
         //just for testing purpose
-//        storeImageForJUnitTest(matOMR,"omr_rgb");
-//        storeImageForJUnitTest(matGray,"omr_gray");
-//        storeImageForJUnitTest(matThresholded,"omr_threshold");
-//        storeImageOnDevice(matOMR,"omr_orig");
-//        storeImageOnDevice(matGray,"omr_gray");
-//        storeImageOnDevice(matThresholded,"omr_thrshold");
+        StorageUtils.storeImageForJUnitTest(matOMR,"omr_rgb");
+        StorageUtils.storeImageForJUnitTest(matGray,"omr_gray");
+        StorageUtils.storeImageForJUnitTest(matThresholded,"omr_threshold");
+//        StorageUtils.storeImageOnDevice(matOMR,"omr_orig");
+//        StorageUtils.storeImageOnDevice(matGray,"omr_gray");
+//        StorageUtils.storeImageOnDevice(matThresholded,"omr_thrshold");
         return studentAnswers;
-    }
-
-    public void storeImageOnDevice(Mat mat, String imageName){
-        FileOutputStream out = null;
-        File imageFile = new File(Environment.getExternalStorageDirectory(), imageName+".jpg");
-
-        Bitmap bmp = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(mat, bmp);
-
-        try {
-            if(!imageFile.exists()) {
-                imageFile.createNewFile();
-            }
-            out = new FileOutputStream(imageFile);
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void storeImageForJUnitTest(Mat mat, String imageName){
-        Imgcodecs.imwrite("testimages\\verification\\"+imageName+".jpg", mat);
     }
 }
