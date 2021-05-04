@@ -7,11 +7,8 @@ import com.letssolvetogether.omr.object.OMRSheet;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
 
 import java.io.File;
 
@@ -22,10 +19,8 @@ import static org.junit.Assert.assertEquals;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-@RunWith(RobolectricTestRunner.class)
 public class OMRUnitTest {
     Mat roiOfOMR;
-    OMRTestActivity omrTestActivity;
     byte[][] studentAnswers;
     int[] correctAnswers;
 
