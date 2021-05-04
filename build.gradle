@@ -41,7 +41,7 @@ ext {
     constraintlayoutVersion = "1.1.3"
     robolectricVersion = "1.0.0"
     junitVersion = "4.13"
-    VERSION_NAME = "2.0.2"
+    VERSION_NAME = "2.1.0"
     CAMERA_LIB_VERSION = "1.0.1"
     TRUETIME_LIB_VERSION = "1.0.0"
     OPENCV_LIB_VERSION = "4.3.0"
