@@ -112,7 +112,7 @@ public class HomeActivity extends AppCompatActivity{
             //Display Dialog
             AlertDialog.Builder dialogTips = new AlertDialog.Builder(HomeActivity.this);
             dialogTips.setTitle("Note:");
-            dialogTips.setMessage("You can use this app for free until March 31, 2021.");
+            dialogTips.setMessage("You can use this app for free until August 31, 2021.");
             dialogTips.setNeutralButton("Ok",null);
             dialogTips.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
