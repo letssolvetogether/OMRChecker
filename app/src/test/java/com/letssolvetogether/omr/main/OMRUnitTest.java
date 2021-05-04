@@ -29,10 +29,15 @@ public class OMRUnitTest {
     byte[][] studentAnswers;
     int[] correctAnswers;
 
+    final private static String OPENCV_LIB_NAME = "opencv_java430";
+
+    /**
+     * You must have "opencv_java430.dll" file at app/opencv_java430.dll location
+     * to run these testcases
+     */
     @Before
     public void initOpenCV() {
-        System.loadLibrary("opencv_java342");
-        omrTestActivity = Robolectric.setupActivity(OMRTestActivity.class);
+        System.loadLibrary(OPENCV_LIB_NAME);
     }
 
     @Test

@@ -52,9 +52,9 @@ dependencies {
     implementation "com.google.android.material:material:$materialVersion"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
+    implementation "com.quickbirdstudios:opencv:$OPENCV_LIB_VERSION"
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.robolectric:robolectric:$robolectricVersion"
-    implementation (name:"OpenCV-Android-$OPENCV_LIB_VERSION", ext:"aar")   //https://github.com/steveliles/opencv-android
     implementation (name:"cameralibrary-release-$CAMERA_LIB_VERSION", ext:"aar")
     implementation (name:"truetime-release-$TRUETIME_LIB_VERSION", ext:"aar")
 }
